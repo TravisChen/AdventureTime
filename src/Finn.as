@@ -4,22 +4,27 @@ package
 	
 	public class Finn extends FlxSprite
 	{
-		[Embed(source="data/jake.png")] private var ImgDarwin:Class;
+		[Embed(source="data/darwin.png")] private var ImgDarwin:Class;
 		
 		public var startTime:Number;
 
 		public var roundOver:Boolean = false;
+		public var background:Boolean = false;
+		public var foreground:Boolean = false;
 		
 		private var _board:Board;
-		private var tileX:Number;
-		private var tileY:Number;
+		public var tileX:Number;
+		public var tileY:Number;
 		private var moveTo:Tile;
 		private var moving:Boolean = false;
 		private var speed:Number = 2.0;
 		
-		public function Finn( X:int, Y:int, board:Board)
+		private var _jake:Jake;
+		
+		public function Finn( X:int, Y:int, board:Board, jake:Jake)
 		{
 			_board = board;
+			_jake = jake;
 			
 			super(X,Y);
 			loadGraphic(ImgDarwin,true,true,32,32);
@@ -50,18 +55,23 @@ package
 			{
 				if( y >= 0 && y < _board.tileMatrix[x].length )
 				{
-					tileX = x;
-					tileY = y;
-					
-					var tile:Tile = _board.tileMatrix[tileX][tileY];	
-					moveTo = tile;
-					moving = true;
+					var tile:Tile = _board.tileMatrix[x][y];	
+					if( !tile.isChain() && !tile.isCollect() )
+					{
+						if( !(x == _jake.tileX && y == _jake.tileY) )
+						{
+							tileX = x;
+							tileY = y;
+							moveTo = tile;
+							moving = true;
+						}
+					}
 				}
 			}
 		}
 		
 		public function updateMovement():void
-		{
+		{			
 			var moveToX:Number = moveTo.x;
 			var moveToY:Number = moveTo.y;
 			
@@ -94,6 +104,26 @@ package
 		{			
 			super.update();
 			
+			if( tileY < _jake.tileY || tileX < _jake.tileX )
+			{
+				foreground = false;
+				if( !background )
+				{
+					background = true;
+					PlayState.groupPlayer.remove(this);
+					PlayState.groupBackground.add(this);
+				}
+			}
+			else
+			{
+				background = false;
+				if( !foreground )
+				{
+					PlayState.groupBackground.remove(this);
+					PlayState.groupPlayer.add(this);
+				}
+			}
+			
 			if( moving )
 			{
 				updateMovement();
@@ -112,21 +142,19 @@ package
 				return;
 			}
 			
-			// MOVEMENT Left, Right
-			acceleration.x = 0;
-			if(FlxG.keys.LEFT || FlxG.keys.A)
+			if(FlxG.keys.LEFT )
 			{
 				moveToTile( tileX - 1, tileY );
 			}
-			else if(FlxG.keys.RIGHT || FlxG.keys.D)
+			else if(FlxG.keys.RIGHT )
 			{
 				moveToTile( tileX + 1, tileY );
 			}
-			else if(FlxG.keys.UP || FlxG.keys.W)
+			else if(FlxG.keys.UP )
 			{
 				moveToTile( tileX, tileY - 1);
 			}
-			else if(FlxG.keys.DOWN || FlxG.keys.S)
+			else if(FlxG.keys.DOWN )
 			{
 				moveToTile( tileX, tileY + 1);
 			}

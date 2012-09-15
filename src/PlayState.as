@@ -7,6 +7,7 @@ package
 		public static var _currLevel:Level;
 		
 		public static var groupBackground:FlxGroup;
+		public static var groupPlayerBehind:FlxGroup;
 		public static var groupBoard:FlxGroup;
 		public static var groupCollects:FlxGroup;
 		public static var groupPlayer:FlxGroup;
@@ -17,6 +18,7 @@ package
 			super();
 
 			groupBackground = new FlxGroup;
+			groupPlayerBehind = new FlxGroup;
 			groupBoard = new FlxGroup;
 			groupPlayer = new FlxGroup;
 			groupCollects = new FlxGroup;
@@ -27,6 +29,7 @@ package
 			_currLevel = new currLevelClass( groupBackground );
 			
 			this.add(groupBackground);
+			this.add(groupPlayerBehind);
 			this.add(groupBoard);
 			this.add(groupPlayer);
 			this.add(groupCollects);

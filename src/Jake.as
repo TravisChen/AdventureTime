@@ -11,8 +11,8 @@ package
 		public var roundOver:Boolean = false;
 		
 		private var _board:Board;
-		private var tileX:Number;
-		private var tileY:Number;
+		public var tileX:Number;
+		public var tileY:Number;
 		private var moveTo:Tile;
 		private var moving:Boolean = false;
 		private var direction:int = 0;
@@ -22,11 +22,13 @@ package
 		public var chainLength:int = MIN_CHAIN;
 
 		private var moveTimer:Number = MOVE_TIME;
+
+		private var _finn:Finn;
 		
-		public const MOVE_TIME:Number = 0.1;	
-		public const MIN_CHAIN:Number = 1;
-	
-		public function Jake( X:int, Y:int, board:Board)
+		public const MOVE_TIME:Number = 0.5;	
+		public const MIN_CHAIN:Number = 3;
+
+		public function Jake( X:int, Y:int, board:Board )
 		{
 			_board = board;
 			
@@ -47,13 +49,11 @@ package
 			
 			// Start time
 			startTime = 0.5;
-
-			addAnimation("idle", [0]);
-			addAnimation("run", [1,2,3,4], 18);
-			addAnimation("dig", [5,6,7], 32);
-			addAnimation("jump", [8,9,10], 18, false);
-			addAnimation("land", [8], 20);
-			addAnimation("stun", [11,12], 15);
+		}
+		
+		public function setFinn( finn:Finn ):void
+		{
+			_finn = finn;
 		}
 
 		public function moveToTile( x:int, y:int ):void
@@ -130,6 +130,14 @@ package
 			var tile:Tile = _board.tileMatrix[x][y];	
 			if( !tile.isChain() )
 			{
+				if( _finn )
+				{
+					if( x == _finn.tileX && y == _finn.tileY )
+					{
+						return false;
+					}
+				}
+				
 				tileX = x;
 				tileY = y;
 				moveTo = tile;
@@ -176,19 +184,19 @@ package
 			
 			// MOVEMENT Left, Right
 			acceleration.x = 0;
-			if(FlxG.keys.LEFT || FlxG.keys.A && direction != 1)
+			if( FlxG.keys.A && direction != 1)
 			{
 				direction = 0;
 			}
-			else if(FlxG.keys.RIGHT || FlxG.keys.D && direction != 0)
+			else if( FlxG.keys.D && direction != 0)
 			{
 				direction = 1;
 			}
-			else if(FlxG.keys.UP || FlxG.keys.W && direction != 3)
+			else if( FlxG.keys.W && direction != 3)
 			{
 				direction = 2;
 			}
-			else if(FlxG.keys.DOWN || FlxG.keys.S && direction != 2)
+			else if( FlxG.keys.S && direction != 2)
 			{
 				direction = 3;
 			}

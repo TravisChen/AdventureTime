@@ -56,6 +56,9 @@ package    {
 					var tile:Tile = new Tile( type, startX + x*offsetX + y*isometrixOffsetY,  startY + y*offsetY + x*isometrixOffsetX, this );					
 					PlayState.groupBoard.add(tile);
 					row.push(tile);
+					
+					var tileBackground:TileBackground = new TileBackground( type, startX + x*offsetX + y*isometrixOffsetY,  startY + y*offsetY + x*isometrixOffsetX );				
+					PlayState.groupBackground.add(tileBackground);
 				}
 				
 				tileMatrix.push(row);

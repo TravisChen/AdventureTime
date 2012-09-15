@@ -31,14 +31,15 @@ package    {
 			// Create board
 			board = new Board();	
 			
-			// Create finn
-			finn = new Finn(0,0,board);
-			PlayState.groupPlayer.add(finn);
-	
 			// Create jake
 			jake = new Jake(8,8,board);
 			PlayState.groupPlayer.add(jake);
-
+			
+			// Create finn
+			finn = new Finn(0,0,board,jake);
+			jake.setFinn( finn );
+			PlayState.groupPlayer.add(finn);
+	
 			// Timer
 			startTime = 1.0;
 			endTime = 3.0;

@@ -40,9 +40,11 @@ package
 			switch (tileType){
 				case 0:
 					loadGraphic(ImgTile0, true, true, width, height);
+					alpha = 0;
 					break;
 				case 1:
 					loadGraphic(ImgTile1, true, true, width, height);
+					alpha = 0;
 					break;
 				case 2:
 					// Bounding box tweaks
@@ -64,7 +66,7 @@ package
 			}
 			type = tileType;
 		}
-		
+
 		public function addSnakeChain( currChainLength:int, moveTime:Number ):void
 		{
 			chainLength = currChainLength;
@@ -86,10 +88,18 @@ package
 			return false;
 		}
 		
+		public function isCollect():Boolean 
+		{
+			if( type == 3 )
+				return true;
+			return false;	
+		}
+		
 		public function removeCollect():Boolean
 		{
 			if( type == 3 )
 			{
+				updateGraphic( baseType );
 				_board.removeCollect();
 				return true;
 			}
