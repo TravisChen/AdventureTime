@@ -110,6 +110,8 @@ package    {
 		
 		override public function update():void
 		{	
+			FlxG.bgColor = 0xFF8ad7e9;
+		
 			// Timer
 			updateTimer();
 
