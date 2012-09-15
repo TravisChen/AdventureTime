@@ -31,9 +31,13 @@ package    {
 			// Create board
 			board = new Board();	
 			
-			// Create player
+			// Create finn
 			finn = new Finn(0,0,board);
 			PlayState.groupPlayer.add(finn);
+	
+			// Create jake
+			jake = new Jake(8,8,board);
+			PlayState.groupPlayer.add(jake);
 
 			// Timer
 			startTime = 1.0;
@@ -109,8 +113,12 @@ package    {
 		}
 		
 		override public function update():void
-		{	
+		{
+			// BG color
 			FlxG.bgColor = 0xFF8ad7e9;
+			
+			// Update board
+			board.update();
 		
 			// Timer
 			updateTimer();

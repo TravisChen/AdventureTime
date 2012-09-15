@@ -6,9 +6,11 @@ package    {
 		
 		// Tiles
 		public var tileMatrix:Array; 
+		public var numCollects:int = 0;
 		public const BOARD_TILE_WIDTH:uint = 19;
 		public const BOARD_TILE_HEIGHT:uint = 19;
-
+		public const MAX_COLLECTS:uint = 3;
+		
 		public function Board()
 		{
 			createTiles();
@@ -16,7 +18,10 @@ package    {
 		
 		public function update():void
 		{
-			
+			if( numCollects < MAX_COLLECTS )
+			{
+				addCollect();
+			}
 		}
 		
 		private function createTiles():void {
@@ -48,14 +53,31 @@ package    {
 						alternate = true;
 					}
 					
-					var tile:Tile = new Tile( type, startX + x*offsetX + y*isometrixOffsetY,  startY + y*offsetY + x*isometrixOffsetX );					
+					var tile:Tile = new Tile( type, startX + x*offsetX + y*isometrixOffsetY,  startY + y*offsetY + x*isometrixOffsetX, this );					
 					PlayState.groupBoard.add(tile);
 					row.push(tile);
 				}
 				
 				tileMatrix.push(row);
 			}
-			
+		}
+
+		public function removeCollect():void
+		{
+			numCollects--;
+		}
+		
+		public function addCollect():void
+		{
+			var x:uint = Math.floor(Math.random() * BOARD_TILE_WIDTH);
+			var y:uint = Math.floor(Math.random() * BOARD_TILE_HEIGHT);
+
+			var tile:Tile = tileMatrix[x][y];	
+			if( tile.type == 0 || tile.type == 1 )
+			{
+				tile.setCollect();
+				numCollects++;
+			}
 		}
 	}
 	

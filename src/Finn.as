@@ -7,12 +7,8 @@ package
 		[Embed(source="data/jake.png")] private var ImgDarwin:Class;
 		
 		public var startTime:Number;
-		
-		private var jumpPower:int;
-		private var lastVelocityY:int;
-		private var jumping:Boolean;
-		public var landing:Boolean;
-		public var roundOver:Boolean;
+
+		public var roundOver:Boolean = false;
 		
 		private var _board:Board;
 		private var tileX:Number;
@@ -32,18 +28,13 @@ package
 			setTilePosition( x, y );
 			
 			// Bounding box tweaks
-			width = 16;
-			height = 16;
+			width = 32;
+			height = 32;
 			offset.x = 0;
 			offset.y = 20;
 			
-			// Init
-			jumping = false;
-			roundOver = false;
-			
 			// Start time
 			startTime = 0.5;
-			lastVelocityY = velocity.y;
 			
 			addAnimation("idle", [0]);
 			addAnimation("run", [1,2,3,4], 18);
@@ -120,16 +111,6 @@ package
 				play("idle");
 				return;
 			}
-
-			if( landing ) 
-			{
-				play("land");
-				if(finished)
-				{
-					landing = false;					
-				}
-				return;
-			}	
 			
 			// MOVEMENT Left, Right
 			acceleration.x = 0;

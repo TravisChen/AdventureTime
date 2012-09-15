@@ -5,6 +5,7 @@ package    {
 	public class Level {
 		
 		public var finn:Finn;
+		public var jake:Jake;
 		
 		public var levelSizeX:Number = 0;
 		public var levelSizeY:Number = 0;
