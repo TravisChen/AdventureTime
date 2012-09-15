@@ -14,10 +14,21 @@ package
 		public var landing:Boolean;
 		public var roundOver:Boolean;
 		
-		public function Player(X:int,Y:int)
+		private var _board:Board;
+		private var tileX:Number;
+		private var tileY:Number;
+		private var moveTo:Tile;
+		private var moving:Boolean = false;
+		
+		public function Player( X:int, Y:int, board:Board)
 		{
+			_board = board;
+			
 			super(X,Y);
 			loadGraphic(ImgDarwin,true,true,32,32);
+			
+			// Move player to Tile
+			setTilePosition( x, y );
 			
 			// Bounding box tweaks
 			width = 16;
@@ -31,18 +42,7 @@ package
 			
 			// Start time
 			startTime = 0.5;
-			
 			lastVelocityY = velocity.y;
-			
-			// Basic player physics
-			var runSpeed:uint = 140;
-			drag.x = runSpeed*8;
-			jumpPower = 180;
-			maxVelocity.x = runSpeed;
-			maxVelocity.y = jumpPower;
-			
-			// Gravity
-			acceleration.y = 0;
 			
 			addAnimation("idle", [0]);
 			addAnimation("run", [1,2,3,4], 18);
@@ -52,9 +52,44 @@ package
 			addAnimation("stun", [11,12], 15);
 		}
 
+		public function moveToTile( x:int, y:int ):void
+		{
+			if( x >= 0 && x < _board.tileMatrix.length )
+			{
+				if( y >= 0 && y < _board.tileMatrix[x].length )
+				{
+					setTilePosition( x, y );
+				}
+			}
+		}
+		
+		public function updateMovement():void
+		{
+			this.x = moveTo.x;
+			this.y = moveTo.y;
+			moving = false;
+		}
+		
+		public function setTilePosition( x:int, y:int ):void
+		{
+			tileX = x;
+			tileY = y;
+			
+			var tile:Tile = _board.tileMatrix[tileX][tileY];	
+			this.x = tile.x;
+			this.y = tile.y;
+			super.update();
+		}
+	
 		override public function update():void
 		{			
 			super.update();
+			
+			if( moving )
+			{
+				updateMovement();
+				return;
+			}
 
 			if( startTime > 0 )
 			{
@@ -82,52 +117,19 @@ package
 			acceleration.x = 0;
 			if(FlxG.keys.LEFT || FlxG.keys.A)
 			{
-				facing = LEFT;
-				acceleration.x -= drag.x;
+				moveToTile( tileX - 1, tileY );
 			}
 			else if(FlxG.keys.RIGHT || FlxG.keys.D)
 			{
-				facing = RIGHT;
-				acceleration.x += drag.x;
+				moveToTile( tileX + 1, tileY );
 			}
-			
-			// MOVEMENT Jump
-//			if( FlxG.keys.UP || FlxG.keys.W)
-//			{
-//				if( !velocity.y && !jumping )
-//				{
-//					play("jump");
-//					velocity.y = -jumpPower;
-//				}
-//				jumping = true;
-//			}
-//			else
-//			{
-//				jumping = false;
-//			}
-			
-			// Animation
-			if( !velocity.y )
+			else if(FlxG.keys.UP || FlxG.keys.W)
 			{
-				if(velocity.x == 0)
-				{
-					play("idle");
-				}
-				else
-				{
-					play("run");
-				}
+				moveToTile( tileX, tileY - 1);
 			}
-
-			// Landing
-			if( lastVelocityY != 0 && velocity.y == 0 )
+			else if(FlxG.keys.DOWN || FlxG.keys.S)
 			{
-				landing = true;
-				lastVelocityY = 0;		
-			}
-			else
-			{
-				lastVelocityY = velocity.y;
+				moveToTile( tileX, tileY + 1);
 			}
 		}
 	}

@@ -18,21 +18,26 @@ package    {
 		private var roundEndPointsText:FlxText;
 		
 		// Consts
-		public const MAX_TIME:uint = 10;
+		public const MAX_TIME:uint = 120;
 		public const TEXT_COLOR:uint = 0xFF555555;
+		
+		public var board:Board;
 		
 		public function Level_Main( group:FlxGroup ) {
 			
-			levelSizeX = 320;
-			levelSizeY = 240;
+			levelSizeX = 640;
+			levelSizeY = 480;
 
+			// Create board
+			board = new Board();	
+			
 			// Create player
-			player = new Player(FlxG.height*1/4,FlxG.height/2);
+			player = new Player(0,0,board);
 			PlayState.groupPlayer.add(player);
 
-			// Create enemy
-			enemy = new Enemy(FlxG.height*3/4,FlxG.height/2);
-			PlayState.groupPlayer.add(enemy);
+//			// Create enemy
+//			enemy = new Enemy(FlxG.height*3/4,FlxG.height/2);
+//			PlayState.groupPlayer.add(enemy);
 			
 			// Timer
 			startTime = 1.0;
