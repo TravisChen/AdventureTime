@@ -32,13 +32,9 @@ package    {
 			board = new Board();	
 			
 			// Create player
-			player = new Player(0,0,board);
-			PlayState.groupPlayer.add(player);
+			finn = new Finn(0,0,board);
+			PlayState.groupPlayer.add(finn);
 
-//			// Create enemy
-//			enemy = new Enemy(FlxG.height*3/4,FlxG.height/2);
-//			PlayState.groupPlayer.add(enemy);
-			
 			// Timer
 			startTime = 1.0;
 			endTime = 3.0;
@@ -126,7 +122,7 @@ package    {
 		
 		private function showEndPrompt():void 
 		{
-			PlayState._currLevel.player.roundOver = true;
+			PlayState._currLevel.finn.roundOver = true;
 			roundEndPointsText.visible = true;
 		}
 		

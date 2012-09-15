@@ -20,6 +20,7 @@ package
 		{
 			width = 32;
 			height = 32;
+			offset.x = 0;
 			offset.y = 0;
 			alpha = 1;
 			

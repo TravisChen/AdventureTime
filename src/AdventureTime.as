@@ -1,6 +1,7 @@
 package
 {
 	import org.flixel.*; 
+//	[SWF(width="640", height="400", backgroundColor="#000000")] 
 	[SWF(width="1280", height="800", backgroundColor="#000000")] 
 	
 	public class AdventureTime extends FlxGame
@@ -9,6 +10,7 @@ package
 		
 		public function AdventureTime()
 		{
+//			super(640,400,PlayState,1);
 			super(640,400,PlayState,2);
 		}
 	}

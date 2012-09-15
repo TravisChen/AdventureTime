@@ -2,9 +2,9 @@ package
 {
 	import org.flixel.*;
 	
-	public class Player extends FlxSprite
+	public class Finn extends FlxSprite
 	{
-		[Embed(source="data/darwin.png")] private var ImgDarwin:Class;
+		[Embed(source="data/jake.png")] private var ImgDarwin:Class;
 		
 		public var startTime:Number;
 		
@@ -19,8 +19,9 @@ package
 		private var tileY:Number;
 		private var moveTo:Tile;
 		private var moving:Boolean = false;
+		private var speed:Number = 2.0;
 		
-		public function Player( X:int, Y:int, board:Board)
+		public function Finn( X:int, Y:int, board:Board)
 		{
 			_board = board;
 			
@@ -33,8 +34,8 @@ package
 			// Bounding box tweaks
 			width = 16;
 			height = 16;
-			offset.x = 8;
-			offset.y = 16;
+			offset.x = 0;
+			offset.y = 20;
 			
 			// Init
 			jumping = false;
@@ -58,16 +59,33 @@ package
 			{
 				if( y >= 0 && y < _board.tileMatrix[x].length )
 				{
-					setTilePosition( x, y );
+					tileX = x;
+					tileY = y;
+					
+					var tile:Tile = _board.tileMatrix[tileX][tileY];	
+					moveTo = tile;
+					moving = true;
 				}
 			}
 		}
 		
 		public function updateMovement():void
 		{
-			this.x = moveTo.x;
-			this.y = moveTo.y;
-			moving = false;
+			var moveToX:Number = moveTo.x;
+			var moveToY:Number = moveTo.y;
+			
+			if( x > moveToX )
+				x -= 2 * speed;
+			else if ( x < moveToX )
+				x += 2 * speed;
+			
+			if( y > moveToY )
+				y -= 1 * speed;
+			else if ( y < moveToY )
+				y += 1 * speed;
+			
+			if( x == moveToX && y == moveToY )
+				moving = false;
 		}
 		
 		public function setTilePosition( x:int, y:int ):void

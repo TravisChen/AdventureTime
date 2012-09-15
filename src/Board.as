@@ -31,38 +31,27 @@ package    {
 			var type:int = 0;
 			tileMatrix = new Array();
 			
-			var blockRow:Boolean = false;
-			var blockColumn:Boolean = false;
+			var alternate:Boolean = false;
 			for( var x:int = 0; x < BOARD_TILE_WIDTH; x++)
 			{
 				var row:Array = new Array();
 				for( var y:int = 0; y < BOARD_TILE_HEIGHT; y++ )
 				{	
-					if( blockColumn && blockRow )
+					if( alternate )
 					{
 						type = 1;
-						blockColumn = false;
+						alternate = false;
 					}
 					else
 					{
 						type = 0;
-						blockColumn = true;
+						alternate = true;
 					}
 					
 					var tile:Tile = new Tile( type, startX + x*offsetX + y*isometrixOffsetY,  startY + y*offsetY + x*isometrixOffsetX );					
 					PlayState.groupBoard.add(tile);
 					row.push(tile);
 				}
-				
-				if( blockRow )
-				{
-					blockRow = false;
-				}
-				else
-				{
-					blockRow = true;
-				}
-				blockColumn = false;
 				
 				tileMatrix.push(row);
 			}
