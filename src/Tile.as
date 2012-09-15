@@ -13,12 +13,17 @@ package
 		public var baseType:int = -1;
 		
 		public var chainLength:int = 0;
+		public var tileX:int = 0;
+		public var tileY:int = 0;
+		
 		private var _moveTime:Number;
 		private var _moveTimer:Number;
 		private var _board:Board;
 		
-		public function Tile( tileType:Number, X:Number, Y:Number, board:Board ):void
+		public function Tile( tileType:Number, X:Number, Y:Number, board:Board, setTileX:int, setTileY:int ):void
 		{
+			tileX = setTileX;
+			tileY = setTileY;
 			_board = board;
 			
 			super(X,Y);

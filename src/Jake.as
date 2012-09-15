@@ -14,8 +14,11 @@ package
 		public var tileX:Number;
 		public var tileY:Number;
 		private var moveTo:Tile;
+		private var goalCollect:Tile;
+		
 		private var moving:Boolean = false;
 		private var direction:int = 0;
+
 
 		private var chainArray:Array;
 		
@@ -25,7 +28,7 @@ package
 
 		private var _finn:Finn;
 		
-		public const MOVE_TIME:Number = 0.5;	
+		public const MOVE_TIME:Number = 0.1;	
 		public const MIN_CHAIN:Number = 3;
 
 		public function Jake( X:int, Y:int, board:Board )
@@ -75,17 +78,55 @@ package
 					else
 					{
 						shrink();
+						return;
 					}
 				}
 				else
 				{
 					shrink();		
+					return;
 				}
 			}
 			else
 			{
 				shrink();
+				return;
 			}
+		}
+		
+		public function moveSafe( x:int, y:int ):Boolean
+		{
+			var moveSafe:Boolean = false;
+			if( x >= 0 && x < _board.tileMatrix.length )
+			{
+				if( y >= 0 && y < _board.tileMatrix[x].length )
+				{
+					var tile:Tile = _board.tileMatrix[x][y];	
+					if( !tile.isChain() )
+					{
+						if( !( x == _finn.tileX && y == _finn.tileY ) )
+						{
+							moveSafe = true;
+						}
+					}
+				}
+			}
+			return moveSafe;
+		}
+		
+		public function nextMoveSafe():Boolean
+		{
+			var nextMoveSafe:Boolean = false;
+			if( direction == 0 )
+				nextMoveSafe = moveSafe( tileX - 1, tileY );
+			else if ( direction == 1 )
+				nextMoveSafe = moveSafe( tileX + 1, tileY );
+			else if ( direction == 2 )
+				nextMoveSafe = moveSafe( tileX, tileY - 1);
+			else if (direction == 3 )
+				nextMoveSafe = moveSafe( tileX, tileY + 1);
+			
+			return nextMoveSafe;
 		}
 		
 		public function shrink():void
@@ -99,6 +140,8 @@ package
 					var tile:Tile = chainArray[i];
 					tile.chainLength--;
 				}
+				
+				checkChainArray();
 			}
 		}
 		
@@ -147,6 +190,139 @@ package
 			}
 			return false;
 		}
+		
+		public function newGoal():void
+		{
+			if( !goalCollect )
+			{
+				for( var x:int = 0; x < _board.tileMatrix.length; x++ )
+				{
+					for( var y:int = 0; y < _board.tileMatrix[x].length; y++ )
+					{
+						var tile:Tile = _board.tileMatrix[x][y];	
+						if( tile.isCollect() )
+						{
+							goalCollect = tile;
+							goalCollect.alpha = 0.5;
+							break;
+						}
+					}
+					
+					if( goalCollect )
+					{
+						break;
+					}
+				}
+			}
+		}
+		
+		public function updateAIMovement():void
+		{
+			newGoal();
+
+			if( goalCollect )
+			{
+				if( this.tileX > goalCollect.tileX )
+				{
+					direction = 0;
+				}
+				else if( this.tileX < goalCollect.tileX )
+				{
+					direction = 1;
+				}
+				else if( this.tileY > goalCollect.tileY )
+				{
+					direction = 2;		
+				}
+				else if ( this.tileY < goalCollect.tileY )
+				{
+					direction = 3;
+				}
+				trace( "MOVE" );
+				
+				var originalDirection:int = direction;
+				
+				if( !nextMoveSafe() )
+				{
+					if( originalDirection == 0 )
+					{
+						direction = 1;
+					} 
+					else if ( originalDirection == 1 )
+					{
+						direction = 0;						
+					}
+					else if ( originalDirection == 2 )
+					{
+						direction = 3;
+					}
+					else if ( originalDirection == 3 )
+					{
+						direction = 2;
+					}
+					
+					if( !nextMoveSafe() )
+					{
+						if( originalDirection == 0 )
+						{
+							direction = 2;
+						} 
+						else if ( originalDirection == 1 )
+						{
+							direction = 2;						
+						}
+						else if ( originalDirection == 3 )
+						{
+							direction = 0;
+						}
+						else if ( originalDirection == 4 )
+						{
+							direction = 0;
+						}
+						
+						if( !nextMoveSafe() )
+						{
+							if( originalDirection == 0 )
+							{
+								direction = 3;
+							} 
+							else if ( originalDirection == 1 )
+							{
+								direction = 3;						
+							}
+							else if ( originalDirection == 3 )
+							{
+								direction = 1;
+							}
+							else if ( originalDirection == 4 )
+							{
+								direction = 1;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		public function updateKeyboardMovement():void 
+		{
+			if( FlxG.keys.A && direction != 1)
+			{
+				direction = 0;
+			}
+			else if( FlxG.keys.D && direction != 0)
+			{
+				direction = 1;
+			}
+			else if( FlxG.keys.W && direction != 3)
+			{
+				direction = 2;
+			}
+			else if( FlxG.keys.S && direction != 2)
+			{
+				direction = 3;
+			}
+		}
 	
 		override public function update():void
 		{			
@@ -155,6 +331,9 @@ package
 
 			if( moveTimer <= 0 )
 			{
+				updateAIMovement();
+				updateKeyboardMovement();
+				
 				moveTimer = MOVE_TIME;
 				if( direction == 0 )
 					moveToTile( tileX - 1, tileY );
@@ -163,7 +342,13 @@ package
 				else if ( direction == 2 )
 					moveToTile( tileX, tileY - 1);
 				else if (direction == 3 )
-					moveToTile( tileX, tileY + 1);							
+					moveToTile( tileX, tileY + 1);		
+			
+				if( !goalCollect.isCollect() )
+				{
+					goalCollect = undefined;
+					newGoal();
+				}
 			}
 			else
 			{
@@ -181,25 +366,6 @@ package
 				play("idle");
 				return;
 			}	
-			
-			// MOVEMENT Left, Right
-			acceleration.x = 0;
-			if( FlxG.keys.A && direction != 1)
-			{
-				direction = 0;
-			}
-			else if( FlxG.keys.D && direction != 0)
-			{
-				direction = 1;
-			}
-			else if( FlxG.keys.W && direction != 3)
-			{
-				direction = 2;
-			}
-			else if( FlxG.keys.S && direction != 2)
-			{
-				direction = 3;
-			}
 		}
 	}
 }

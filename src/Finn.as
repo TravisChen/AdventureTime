@@ -10,7 +10,7 @@ package
 
 		public var roundOver:Boolean = false;
 		public var background:Boolean = false;
-		public var foreground:Boolean = false;
+		public var foreground:Boolean = true;
 		
 		private var _board:Board;
 		public var tileX:Number;
@@ -104,25 +104,27 @@ package
 		{			
 			super.update();
 			
-			if( tileY < _jake.tileY || tileX < _jake.tileX )
-			{
-				foreground = false;
-				if( !background )
-				{
-					background = true;
-					PlayState.groupPlayer.remove(this);
-					PlayState.groupBackground.add(this);
-				}
-			}
-			else
-			{
-				background = false;
-				if( !foreground )
-				{
-					PlayState.groupBackground.remove(this);
-					PlayState.groupPlayer.add(this);
-				}
-			}
+//			Need to move this to board, should account  for all jake chains
+//			if( tileY > _jake.tileY || tileX > _jake.tileX )
+//			{
+//				foreground = false;
+//				if( !background )
+//				{
+//					background = true;
+//					PlayState.groupPlayer.remove(this);
+//					PlayState.groupBackground.add(this);
+//				}
+//			}
+//			else
+//			{
+//				background = false;
+//				if( !foreground )
+//				{
+//					foreground = true;
+//					PlayState.groupBackground.remove(this);
+//					PlayState.groupPlayer.add(this);
+//				}
+//			}
 			
 			if( moving )
 			{

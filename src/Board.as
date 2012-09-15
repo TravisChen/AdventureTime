@@ -53,7 +53,7 @@ package    {
 						alternate = true;
 					}
 					
-					var tile:Tile = new Tile( type, startX + x*offsetX + y*isometrixOffsetY,  startY + y*offsetY + x*isometrixOffsetX, this );					
+					var tile:Tile = new Tile( type, startX + x*offsetX + y*isometrixOffsetY,  startY + y*offsetY + x*isometrixOffsetX, this, x, y );					
 					PlayState.groupBoard.add(tile);
 					row.push(tile);
 					
