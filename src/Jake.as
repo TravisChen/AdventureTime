@@ -25,8 +25,10 @@ package
 		private var moveTimer:Number = MOVE_TIME;
 
 		private var _finn:Finn;
+		private var _meemow:Meemow;
+		private var _snail:Snail;
 		
-		public const MOVE_TIME:Number = 0.1;	
+		public const MOVE_TIME:Number = 0.25;	
 		public const MIN_CHAIN:Number = 3;
 
 		public function Jake( X:int, Y:int, board:Board )
@@ -55,6 +57,16 @@ package
 			_finn = finn;
 		}
 
+		public function setMeemow( meemow:Meemow ):void
+		{
+			_meemow = meemow;
+		}
+		
+		public function setSnail( snail:Snail ):void
+		{
+			_snail = snail;
+		}
+		
 		public function moveToTile( x:int, y:int ):void
 		{
 			if( x >= 0 && x < _board.tileMatrix.length )
@@ -105,7 +117,10 @@ package
 						{
 							if( !( x == _finn.tileX && y == _finn.tileY ) )
 							{
-								moveSafe = true;
+								if( !( x == _snail.tileX && y == _snail.tileY ) )
+								{
+									moveSafe = true;
+								}
 							}
 						}
 					}

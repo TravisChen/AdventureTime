@@ -33,7 +33,7 @@ package    {
 			var isometrixOffsetX:int = 8;
 			
 			var startX:int = FlxG.width/2 - offsetX;
-			var startY:int = FlxG.height/8;		
+			var startY:int = FlxG.height/6;		
 			var type:int = 0;
 			tileMatrix = new Array();
 			

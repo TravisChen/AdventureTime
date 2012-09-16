@@ -19,7 +19,7 @@ package    {
 		
 		// Consts
 		public const MAX_TIME:uint = 120;
-		public const TEXT_COLOR:uint = 0xFF555555;
+		public const TEXT_COLOR:uint = 0xFFFFFFFF;
 		
 		public var board:Board;
 		
@@ -35,24 +35,36 @@ package    {
 			jake = new Jake(8,8,board);
 			PlayState.groupPlayer.add(jake);
 			
+			// Create snail
+			snail = new Snail(5,5,board,jake);
+			jake.setSnail( snail );
+			PlayState.groupPlayer.add( snail );
+			
 			// Create finn
-			finn = new Finn(0,0,board,jake);
+			finn = new Finn(0,0,board,jake,snail);
 			jake.setFinn( finn );
 			PlayState.groupPlayer.add(finn);
+//			
+//			// Create meemow
+//			meemow = new Meemow(4,4,board,jake);
+//			jake.setMeemow( meemow );
+//			PlayState.groupPlayer.add( meemow );
+			
+
 	
 			// Timer
 			startTime = 1.0;
 			endTime = 3.0;
 			timer = MAX_TIME;
 			timerText = new FlxText(0, 0, FlxG.width, "0:00");
-			timerText.setFormat(null,16,TEXT_COLOR,"left");
+			timerText.setFormat(null,32,TEXT_COLOR,"left");
 			timerText.scrollFactor.x = timerText.scrollFactor.y = 0;
 			PlayState.groupBackground.add(timerText);
 			
 			// Points
 			points = 0;
 			pointsText = new FlxText(0, 0, FlxG.width, "0");
-			pointsText.setFormat(null,8,TEXT_COLOR,"center");
+			pointsText.setFormat(null,64,TEXT_COLOR,"right");
 			pointsText.scrollFactor.x = pointsText.scrollFactor.y = 0;
 			PlayState.groupBackground.add(pointsText);
 			
@@ -125,7 +137,7 @@ package    {
 			updateTimer();
 
 			// Update points text
-			pointsText.text = "" + points + " (" + PlayState._currLevel.multiplier + "x)";
+			pointsText.text = "" + jake.chainLength;
 			roundEndPointsText.text = "" + points;
 			
 			super.update();

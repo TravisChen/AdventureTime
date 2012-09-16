@@ -6,6 +6,8 @@ package    {
 		
 		public var finn:Finn;
 		public var jake:Jake;
+		public var meemow:Meemow;
+		public var snail:Snail;
 		
 		public var levelSizeX:Number = 0;
 		public var levelSizeY:Number = 0;

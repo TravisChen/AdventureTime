@@ -2,9 +2,9 @@ package
 {
 	import org.flixel.*;
 	
-	public class Finn extends FlxSprite
+	public class Meemow extends FlxSprite
 	{
-		[Embed(source="data/finn.png")] private var ImgFinn:Class;
+		[Embed(source="data/meemow.png")] private var ImgMeemow:Class;
 		
 		public var startTime:Number;
 
@@ -20,28 +20,23 @@ package
 		private var speed:Number = 2.0;
 		
 		private var _jake:Jake;
-		private var _snail:Snail;
 		
-		public function Finn( X:int, Y:int, board:Board, jake:Jake, snail:Snail)
+		public function Meemow( X:int, Y:int, board:Board, jake:Jake)
 		{
 			_board = board;
 			_jake = jake;
-			_snail = snail;
 			
 			super(X,Y);
-			loadGraphic(ImgFinn,true,true,41,64);
+			loadGraphic(ImgMeemow,true,true,32,32);
 			
 			// Move player to Tile
 			setTilePosition( x, y );
 			
 			// Bounding box tweaks
-			width = 41;
-			height = 64;
-			offset.x = 2;
-			offset.y = 52;
-			
-			addAnimation("idle", [0]);
-			addAnimation("walk", [1,2,3,4,5,6], 20);
+			width = 32;
+			height = 32;
+			offset.x = -4;
+			offset.y = 20;
 			
 			// Start time
 			startTime = 0.5;
@@ -58,18 +53,10 @@ package
 					{
 						if( !(x == _jake.tileX && y == _jake.tileY) )
 						{
-							if( !(x == _snail.tileX && y == _snail.tileY) )
-							{
-								tileX = x;
-								tileY = y;
-								moveTo = tile;
-								moving = true;
-								
-								if( tile.isCollect() )
-								{
-									tile.setCollectActive();
-								}
-							}
+							tileX = x;
+							tileY = y;
+							moveTo = tile;
+							moving = true;
 						}
 					}
 				}
@@ -132,7 +119,6 @@ package
 //				}
 //			}
 			
-
 			if( moving )
 			{
 				updateMovement();
@@ -153,27 +139,19 @@ package
 			
 			if(FlxG.keys.LEFT )
 			{
-				play( "walk" );
 				moveToTile( tileX - 1, tileY );
 			}
 			else if(FlxG.keys.RIGHT )
 			{
-				play( "walk" );
 				moveToTile( tileX + 1, tileY );
 			}
 			else if(FlxG.keys.UP )
 			{
-				play( "walk" );
 				moveToTile( tileX, tileY - 1);
 			}
 			else if(FlxG.keys.DOWN )
 			{
-				play( "walk" );
 				moveToTile( tileX, tileY + 1);
-			}
-			else
-			{
-				play( "idle" );
 			}
 		}
 	}

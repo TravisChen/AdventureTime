@@ -2,12 +2,12 @@ package
 {
 	import org.flixel.*;
 	
-	public class Finn extends FlxSprite
+	public class Snail extends FlxSprite
 	{
-		[Embed(source="data/finn.png")] private var ImgFinn:Class;
+		[Embed(source="data/snail.png")] private var ImgSnail:Class;
 		
 		public var startTime:Number;
-
+		
 		public var roundOver:Boolean = false;
 		public var background:Boolean = false;
 		public var foreground:Boolean = true;
@@ -17,36 +17,35 @@ package
 		public var tileY:Number;
 		private var moveTo:Tile;
 		private var moving:Boolean = false;
-		private var speed:Number = 2.0;
+		private var speed:Number = 0.05;
+		private var direction:Number = 0.0;
+		
+		private var moveTimer:Number = MOVE_TIME;
+		public const MOVE_TIME:Number = 5.0;	
 		
 		private var _jake:Jake;
-		private var _snail:Snail;
 		
-		public function Finn( X:int, Y:int, board:Board, jake:Jake, snail:Snail)
+		public function Snail( X:int, Y:int, board:Board, jake:Jake)
 		{
 			_board = board;
 			_jake = jake;
-			_snail = snail;
 			
 			super(X,Y);
-			loadGraphic(ImgFinn,true,true,41,64);
+			loadGraphic(ImgSnail,true,true,32,32);
 			
 			// Move player to Tile
 			setTilePosition( x, y );
 			
 			// Bounding box tweaks
-			width = 41;
-			height = 64;
-			offset.x = 2;
-			offset.y = 52;
-			
-			addAnimation("idle", [0]);
-			addAnimation("walk", [1,2,3,4,5,6], 20);
+			width = 32;
+			height = 32;
+			offset.x = -2;
+			offset.y = 20;
 			
 			// Start time
 			startTime = 0.5;
 		}
-
+		
 		public function moveToTile( x:int, y:int ):void
 		{
 			if( x >= 0 && x < _board.tileMatrix.length )
@@ -58,18 +57,10 @@ package
 					{
 						if( !(x == _jake.tileX && y == _jake.tileY) )
 						{
-							if( !(x == _snail.tileX && y == _snail.tileY) )
-							{
-								tileX = x;
-								tileY = y;
-								moveTo = tile;
-								moving = true;
-								
-								if( tile.isCollect() )
-								{
-									tile.setCollectActive();
-								}
-							}
+							tileX = x;
+							tileY = y;
+							moveTo = tile;
+							moving = true;
 						}
 					}
 				}
@@ -91,8 +82,12 @@ package
 			else if ( y < moveToY )
 				y += 1 * speed;
 			
-			if( x == moveToX && y == moveToY )
+			if( Math.abs(x - moveToX) <= speed && Math.abs(y - moveToY) <= speed )
+			{
+				x = moveToX;
+				y = moveToY;
 				moving = false;
+			}
 		}
 		
 		public function setTilePosition( x:int, y:int ):void
@@ -105,75 +100,42 @@ package
 			this.y = tile.y;
 			super.update();
 		}
-	
+		
 		override public function update():void
 		{			
 			super.update();
 			
-//			Need to move this to board, should account  for all jake chains
-//			if( tileY > _jake.tileY || tileX > _jake.tileX )
-//			{
-//				foreground = false;
-//				if( !background )
-//				{
-//					background = true;
-//					PlayState.groupPlayer.remove(this);
-//					PlayState.groupBackground.add(this);
-//				}
-//			}
-//			else
-//			{
-//				background = false;
-//				if( !foreground )
-//				{
-//					foreground = true;
-//					PlayState.groupBackground.remove(this);
-//					PlayState.groupPlayer.add(this);
-//				}
-//			}
+			if( moveTimer <= 0 )
+			{
+				direction = Math.floor(Math.random() * 4);
+				moveTimer = MOVE_TIME;	
+			}
+			else
+			{
+				moveTimer -= FlxG.elapsed;
+			}
 			
-
 			if( moving )
 			{
 				updateMovement();
 				return;
 			}
-
-			if( startTime > 0 )
-			{
-				startTime -= FlxG.elapsed;
-				return;
-			}
 			
-			if( roundOver )
+			if( direction == 0 )
 			{
-				play("idle");
-				return;
-			}
-			
-			if(FlxG.keys.LEFT )
-			{
-				play( "walk" );
 				moveToTile( tileX - 1, tileY );
 			}
-			else if(FlxG.keys.RIGHT )
+			else if( direction == 1 )
 			{
-				play( "walk" );
 				moveToTile( tileX + 1, tileY );
 			}
-			else if(FlxG.keys.UP )
+			else if( direction == 2 )
 			{
-				play( "walk" );
 				moveToTile( tileX, tileY - 1);
 			}
-			else if(FlxG.keys.DOWN )
+			else if( direction == 3 )
 			{
-				play( "walk" );
 				moveToTile( tileX, tileY + 1);
-			}
-			else
-			{
-				play( "idle" );
 			}
 		}
 	}
