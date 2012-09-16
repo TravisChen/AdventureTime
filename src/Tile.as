@@ -15,6 +15,8 @@ package
 		public var chainLength:int = 0;
 		public var tileX:int = 0;
 		public var tileY:int = 0;
+		public var front:Boolean = false;
+		private var _direction:int = 0;
 		
 		private var _moveTime:Number;
 		private var _moveTimer:Number;
@@ -27,6 +29,17 @@ package
 			_board = board;
 			
 			super(X,Y);
+			
+			addAnimation("idle", [0]);
+			addAnimation("frontRight", [0]);
+			addAnimation("frontDown", [1]);
+			addAnimation("frontLeft", [6]);
+			addAnimation("frontUp", [7]);
+			addAnimation("middle", [2]);
+			addAnimation("buttRight", [8]);
+			addAnimation("buttDown", [9]);
+			addAnimation("buttLeft", [4]);
+			addAnimation("buttUp", [5]);
 			
 			updateGraphic(tileType);
 		}
@@ -72,13 +85,28 @@ package
 			type = tileType;
 		}
 
-		public function addSnakeChain( currChainLength:int, moveTime:Number ):void
+		public function addSnakeChain( currChainLength:int, moveTime:Number, direction:Number ):void
 		{
+			front = true;
 			chainLength = currChainLength;
 			_moveTime = moveTime;
 			_moveTimer = moveTime;
+			_direction = direction;
 			
-			updateGraphic( 2 );			
+			updateGraphic( 2 );	
+			if( direction == 0 )
+				play( "frontLeft" );
+			else if( direction == 1 )
+				play( "frontRight" );
+			else if( direction == 2 )
+				play( "frontUp" );
+			else if( direction == 3 )
+				play( "frontDown" );
+		}
+		
+		public function increaseChainLength():void
+		{
+			chainLength++;
 		}
 		
 		public function setCollect():void 
@@ -113,11 +141,29 @@ package
 		}
 		
 		override public function update():void
-		{		
+		{				
 			if( chainLength >= 0 )
 			{
+				if( chainLength == 1 )
+				{
+					if( _direction == 0 )
+						play( "buttLeft" );
+					else if( _direction == 1 )
+						play( "buttRight" );
+					else if( _direction == 2 )
+						play( "buttUp" );
+					else if( _direction == 3 )
+						play( "buttDown" );
+				}
+				
 				if( _moveTimer <= 0 )
 				{
+					if( front )
+					{
+						front = false;
+						play( "middle" );
+					}
+					
 					chainLength--;
 					_moveTimer = _moveTime;
 					if( chainLength <= 0 )
@@ -129,6 +175,10 @@ package
 				{
 					_moveTimer -= FlxG.elapsed;
 				}
+			}
+			else
+			{
+				play( "idle" );
 			}
 			
 			super.update();

@@ -15,6 +15,7 @@ package
 		public var tileY:Number;
 		private var moveTo:Tile;
 		private var goalCollect:Tile;
+		private var doGrow:Boolean = false;
 		
 		private var moving:Boolean = false;
 		private var direction:int = 0;
@@ -37,6 +38,7 @@ package
 			
 			super(X,Y);
 			loadGraphic(ImgDarwin,true,true,32,32);
+			alpha = 0;
 			
 			// Move player to Tile
 			setTilePosition( x, y );
@@ -65,7 +67,7 @@ package
 			{
 				if( y >= 0 && y < _board.tileMatrix[x].length )
 				{
-					moveTo.addSnakeChain( chainLength, MOVE_TIME );		
+					moveTo.addSnakeChain( chainLength, MOVE_TIME, direction);		
 					chainArray.push( moveTo );
 					
 					if( setTilePosition( x, y ) )
@@ -155,7 +157,7 @@ package
 			for( var i:int = 0; i < chainArray.length; i++ )
 			{
 				var tile:Tile = chainArray[i];
-				tile.chainLength++;
+				tile.increaseChainLength();
 			}			
 		}
 		

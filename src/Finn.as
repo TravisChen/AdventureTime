@@ -40,13 +40,6 @@ package
 			
 			// Start time
 			startTime = 0.5;
-			
-			addAnimation("idle", [0]);
-			addAnimation("run", [1,2,3,4], 18);
-			addAnimation("dig", [5,6,7], 32);
-			addAnimation("jump", [8,9,10], 18, false);
-			addAnimation("land", [8], 20);
-			addAnimation("stun", [11,12], 15);
 		}
 
 		public function moveToTile( x:int, y:int ):void
