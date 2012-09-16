@@ -101,9 +101,55 @@ package
 			super.update();
 		}
 		
+		public function updateZOrdering():void
+		{
+			var rightX:int = tileX + 1;
+			var downY:int = tileY + 1;
+			var behind:Boolean = false;
+			if( rightX < _board.tileMatrix.length )
+			{
+				var rightTile:Tile = _board.tileMatrix[rightX][tileY];	
+				if( rightTile.isChain() )
+				{
+					behind = true;
+				}
+			}
+			
+			if( downY < _board.tileMatrix.length )
+			{
+				var downTile:Tile = _board.tileMatrix[tileX][downY];	
+				if( downTile.isChain() )
+				{
+					behind = true;
+				}
+			}
+			
+			if( rightX < _board.tileMatrix.length && downY < _board.tileMatrix.length )
+			{
+				var cornerTile:Tile = _board.tileMatrix[rightX][downY];	
+				if( cornerTile.isChain() )
+				{
+					behind = true;
+				}
+			}
+			
+			if( behind )
+			{
+				PlayState.groupPlayer.remove( this );
+				PlayState.groupPlayerBehind.add( this );
+			}
+			else
+			{
+				PlayState.groupPlayerBehind.remove( this );
+				PlayState.groupPlayer.add( this );
+			}
+		}
+		
 		override public function update():void
-		{			
+		{	
 			super.update();
+			
+			updateZOrdering();
 			
 			if( moveTimer <= 0 )
 			{
@@ -137,6 +183,23 @@ package
 			{
 				moveToTile( tileX, tileY + 1);
 			}
+			
+//			if(FlxG.keys.LEFT )
+//			{
+//				moveToTile( tileX - 1, tileY );
+//			}
+//			else if(FlxG.keys.RIGHT )
+//			{
+//				moveToTile( tileX + 1, tileY );
+//			}
+//			else if(FlxG.keys.UP )
+//			{
+//				moveToTile( tileX, tileY - 1);
+//			}
+//			else if(FlxG.keys.DOWN )
+//			{
+//				moveToTile( tileX, tileY + 1);
+//			}
 		}
 	}
 }

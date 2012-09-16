@@ -1,5 +1,7 @@
 package
 {
+	import flashx.textLayout.formats.BackgroundColor;
+	
 	import org.flixel.*;
 	
 	public class Finn extends FlxSprite
@@ -64,7 +66,7 @@ package
 								tileY = y;
 								moveTo = tile;
 								moving = true;
-								
+													
 								if( tile.isCollect() )
 								{
 									tile.setCollectActive();
@@ -73,6 +75,50 @@ package
 						}
 					}
 				}
+			}
+		}
+		
+		public function updateZOrdering():void
+		{
+			var rightX:int = tileX + 1;
+			var downY:int = tileY + 1;
+			var behind:Boolean = false;
+			if( rightX < _board.tileMatrix.length )
+			{
+				var rightTile:Tile = _board.tileMatrix[rightX][tileY];	
+				if( rightTile.isChain() )
+				{
+					behind = true;
+				}
+			}
+			
+			if( downY < _board.tileMatrix.length )
+			{
+				var downTile:Tile = _board.tileMatrix[tileX][downY];	
+				if( downTile.isChain() )
+				{
+					behind = true;
+				}
+			}
+			
+			if( rightX < _board.tileMatrix.length && downY < _board.tileMatrix.length )
+			{
+				var cornerTile:Tile = _board.tileMatrix[rightX][downY];	
+				if( cornerTile.isChain() )
+				{
+					behind = true;
+				}
+			}
+			
+			if( behind )
+			{
+				PlayState.groupPlayer.remove( this );
+				PlayState.groupPlayerBehind.add( this );
+			}
+			else
+			{
+				PlayState.groupPlayerBehind.remove( this );
+				PlayState.groupPlayer.add( this );
 			}
 		}
 		
@@ -108,31 +154,10 @@ package
 	
 		override public function update():void
 		{			
-			super.update();
-			
-//			Need to move this to board, should account  for all jake chains
-//			if( tileY > _jake.tileY || tileX > _jake.tileX )
-//			{
-//				foreground = false;
-//				if( !background )
-//				{
-//					background = true;
-//					PlayState.groupPlayer.remove(this);
-//					PlayState.groupBackground.add(this);
-//				}
-//			}
-//			else
-//			{
-//				background = false;
-//				if( !foreground )
-//				{
-//					foreground = true;
-//					PlayState.groupBackground.remove(this);
-//					PlayState.groupPlayer.add(this);
-//				}
-//			}
-			
+			super.update();			
 
+			updateZOrdering();
+			
 			if( moving )
 			{
 				updateMovement();
