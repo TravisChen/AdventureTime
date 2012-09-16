@@ -8,6 +8,7 @@ package
 	{
 		[Embed(source="data/finn.png")] private var ImgFinn:Class;
 		[Embed(source="data/wasd.png")] private var ImgWasd:Class;
+		[Embed(source="data/space.png")] private var ImgSpace:Class;
 		
 		public var startTime:Number;
 
@@ -27,9 +28,15 @@ package
 		private var _snail:Snail;
 		
 		public var wasd:FlxSprite;
-		public var wasdFadeOutTime:Number;
-		public var wasdBounceTime:Number;
-		public var wasdBounceToggle:Boolean;
+		public var wasdFadeOutTime:Number = 0;
+		public var wasdBounceTime:Number = 0;
+		public var wasdBounceToggle:Boolean = true;
+		
+		public var space:FlxSprite;
+		public var spaceFadeOutTime:Number = 0;
+		public var spaceBounceTime:Number = 0;
+		public var spaceBounceToggle:Boolean = true;
+		public var collectedFirstPie:Boolean = false;
 		
 		public function Finn( X:int, Y:int, board:Board, jake:Jake, snail:Snail)
 		{
@@ -50,13 +57,16 @@ package
 			offset.y = 52;
 			
 			// WASD
-			wasdFadeOutTime = 0;
-			wasdBounceToggle = true;
-			wasdBounceTime = 0;
 			wasd = new FlxSprite(0,0);
 			wasd.loadGraphic(ImgWasd, true, true, 32, 32);
 			wasd.alpha = 1;
 			PlayState.groupForeground.add(wasd);
+			
+			// SPACE
+			space = new FlxSprite(0,0);
+			space.loadGraphic(ImgSpace, true, true, 32, 32);
+			space.alpha = 1;
+			PlayState.groupForeground.add(space);
 			
 			addAnimation("idle", [0]);
 			addAnimation("walk", [1,2,3,4,5,6], 20);
@@ -83,15 +93,46 @@ package
 								tileY = y;
 								moveTo = tile;
 								moving = true;
-													
-								if( tile.isCollect() )
-								{
-									tile.setCollectActive();
-								}
+											
+//								if( tile.isCollect() )
+//								{
+//									collectedFirstPie = true;
+//									tile.setCollectActive();
+//								}
 							}
 						}
 					}
 				}
+			}
+		}
+		
+		public function kick():void
+		{
+			var startX:int = tileX - 1;
+			var startY:int = tileY - 1;
+			var incrementX:int = startX;
+			var incrementY:int = startY;
+			
+			for( var i:int = 0; i < 3; i++ )
+			{
+				for( var j:int = 0; j < 3; j++ )
+				{
+					if( incrementX >= 0 && incrementX < _board.tileMatrix.length )
+					{
+						if( incrementY >= 0 && incrementY < _board.tileMatrix[incrementX].length )
+						{
+							var tile:Tile = _board.tileMatrix[incrementX][incrementY];
+							if( tile.isCollect() )
+							{
+								collectedFirstPie = true;
+								tile.setCollectActive();
+							}
+						}
+					}
+					incrementY += 1;
+				}
+				incrementX += 1;
+				incrementY = startY;
 			}
 		}
 		
@@ -201,9 +242,55 @@ package
 			}
 		}
 		
+		public function updateSpace():void 
+		{
+			space.y = y - 76;
+			space.x = x + 2;
+			
+			if( wasd.alpha == 1 )
+			{
+				space.alpha = 0;
+				return;
+			}
+			else
+			{
+				if( !collectedFirstPie )
+				{
+					space.alpha += 0.05;
+				}
+			}
+			
+			if( collectedFirstPie )
+			{
+				space.alpha -= 0.05;		
+			}
+			else
+			{
+				if( spaceBounceTime <= 0 )
+				{
+					spaceBounceTime = 0.02;
+					if( wasdBounceToggle )
+					{
+						space.y += 1;
+						spaceBounceToggle = false;
+					}
+					else
+					{
+						space.y -= 1;
+						spaceBounceToggle = true;
+					}
+				}
+				else
+				{
+					spaceBounceTime -= FlxG.elapsed;
+				}
+			}
+		}
+		
 		override public function update():void
 		{			
 			updateWasd();
+			updateSpace();
 			
 			super.update();			
 
@@ -238,6 +325,7 @@ package
 			
 			if( FlxG.keys.SPACE )
 			{
+				kick();
 				kicking = true;
 				play( "kick" );
 			}
