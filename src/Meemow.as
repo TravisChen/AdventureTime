@@ -22,7 +22,7 @@ package
 		
 		private var dead:Boolean = true;
 		private var deadTimer:Number = DEAD_TIME;
-		public const DEAD_TIME:Number = 5;
+		public const DEAD_TIME:Number = 4;
 		
 		private var appear:Boolean = false;
 		private var stab:Boolean = false;
@@ -287,7 +287,7 @@ package
 		public function kick():void
 		{
 			dead = true;
-			deadTimer = DEAD_TIME;
+			deadTimer = DEAD_TIME + Math.floor(Math.random() * 2);;
 			
 			appear = true;
 			play( "appear" );
