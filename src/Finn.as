@@ -7,6 +7,7 @@ package
 	public class Finn extends FlxSprite
 	{
 		[Embed(source="data/finn.png")] private var ImgFinn:Class;
+		[Embed(source="data/wasd.png")] private var ImgWasd:Class;
 		
 		public var startTime:Number;
 
@@ -25,6 +26,11 @@ package
 		private var _jake:Jake;
 		private var _snail:Snail;
 		
+		public var wasd:FlxSprite;
+		public var wasdFadeOutTime:Number;
+		public var wasdBounceTime:Number;
+		public var wasdBounceToggle:Boolean;
+		
 		public function Finn( X:int, Y:int, board:Board, jake:Jake, snail:Snail)
 		{
 			_board = board;
@@ -42,6 +48,15 @@ package
 			height = 64;
 			offset.x = 2;
 			offset.y = 52;
+			
+			// WASD
+			wasdFadeOutTime = 0;
+			wasdBounceToggle = true;
+			wasdBounceTime = 0;
+			wasd = new FlxSprite(0,0);
+			wasd.loadGraphic(ImgWasd, true, true, 32, 32);
+			wasd.alpha = 1;
+			PlayState.groupForeground.add(wasd);
 			
 			addAnimation("idle", [0]);
 			addAnimation("walk", [1,2,3,4,5,6], 20);
@@ -154,8 +169,42 @@ package
 			super.update();
 		}
 	
+		public function updateWasd():void 
+		{
+			wasd.y = y - 76;
+			wasd.x = x + 2;
+			
+			if( moving )
+			{
+				wasd.alpha -= 0.05;		
+			}
+			else
+			{
+				if( wasdBounceTime <= 0 )
+				{
+					wasdBounceTime = 0.02;
+					if( wasdBounceToggle )
+					{
+						wasd.y += 1;
+						wasdBounceToggle = false;
+					}
+					else
+					{
+						wasd.y -= 1;
+						wasdBounceToggle = true;
+					}
+				}
+				else
+				{
+					wasdBounceTime -= FlxG.elapsed;
+				}
+			}
+		}
+		
 		override public function update():void
 		{			
+			updateWasd();
+			
 			super.update();			
 
 			updateZOrdering();

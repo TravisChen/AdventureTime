@@ -36,12 +36,12 @@ package    {
 			PlayState.groupPlayer.add(jake);
 			
 			// Create snail
-			snail = new Snail(5,5,board,jake);
+			snail = new Snail(1,5,board,jake);
 			jake.setSnail( snail );
 			PlayState.groupPlayer.add( snail );
 			
 			// Create finn
-			finn = new Finn(0,0,board,jake,snail);
+			finn = new Finn(16,16,board,jake,snail);
 			jake.setFinn( finn );
 			PlayState.groupPlayer.add(finn);
 //			
