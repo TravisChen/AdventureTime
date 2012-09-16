@@ -29,7 +29,7 @@ package
 		private var _meemow:Meemow;
 		private var _snail:Snail;
 		
-		public const MOVE_TIME:Number = 0.25;	
+		public const MOVE_TIME:Number = 0.1;	
 		public const MIN_CHAIN:Number = 3;
 		
 		private var particle:FlxEmitter;
@@ -154,7 +154,10 @@ package
 		
 		public function shrink():void
 		{
-			chainLength--;
+			if( chainLength > MIN_CHAIN )
+			{
+				chainLength--;
+			}	
 		}
 		
 		public function grow():void

@@ -44,13 +44,11 @@ package    {
 			finn = new Finn(16,16,board,jake,snail);
 			jake.setFinn( finn );
 			PlayState.groupPlayer.add(finn);
-//			
-//			// Create meemow
-//			meemow = new Meemow(4,4,board,jake);
-//			jake.setMeemow( meemow );
-//			PlayState.groupPlayer.add( meemow );
 			
-
+			// Create meemow
+			meemow = new Meemow(4,4,board,jake,finn,snail);
+			jake.setMeemow( meemow );
+			PlayState.groupPlayer.add( meemow );
 	
 			// Timer
 			startTime = 1.0;

@@ -17,14 +17,19 @@ package
 		public var tileY:Number;
 		private var moveTo:Tile;
 		private var moving:Boolean = false;
-		private var speed:Number = 2.0;
+		private var speed:Number = 0.5;
+		private var direction:Number = 0.0;
 		
 		private var _jake:Jake;
+		private var _finn:Finn;
+		private var _snail:Snail;
 		
-		public function Meemow( X:int, Y:int, board:Board, jake:Jake)
+		public function Meemow( X:int, Y:int, board:Board, jake:Jake, finn:Finn, snail:Snail)
 		{
 			_board = board;
 			_jake = jake;
+			_finn = finn;
+			_snail = snail;
 			
 			super(X,Y);
 			loadGraphic(ImgMeemow,true,true,32,32);
@@ -93,31 +98,188 @@ package
 			super.update();
 		}
 	
+		public function updateZOrdering():void
+		{
+			var rightX:int = tileX + 1;
+			var downY:int = tileY + 1;
+			var behind:Boolean = false;
+			if( rightX < _board.tileMatrix.length )
+			{
+				var rightTile:Tile = _board.tileMatrix[rightX][tileY];	
+				if( rightTile.isChain() )
+				{
+					behind = true;
+				}
+			}
+			
+			if( downY < _board.tileMatrix.length )
+			{
+				var downTile:Tile = _board.tileMatrix[tileX][downY];	
+				if( downTile.isChain() )
+				{
+					behind = true;
+				}
+			}
+			
+			if( rightX < _board.tileMatrix.length && downY < _board.tileMatrix.length )
+			{
+				var cornerTile:Tile = _board.tileMatrix[rightX][downY];	
+				if( cornerTile.isChain() )
+				{
+					behind = true;
+				}
+			}
+			
+			if( behind )
+			{
+				PlayState.groupPlayer.remove( this );
+				PlayState.groupPlayerBehind.add( this );
+			}
+			else
+			{
+				PlayState.groupPlayerBehind.remove( this );
+				PlayState.groupPlayer.add( this );
+			}
+		}
+		
+		public function moveSafe( x:int, y:int, avoidCollects:Boolean ):Boolean
+		{
+			var moveSafe:Boolean = false;
+			if( x >= 0 && x < _board.tileMatrix.length )
+			{
+				if( y >= 0 && y < _board.tileMatrix[x].length )
+				{
+					var tile:Tile = _board.tileMatrix[x][y];	
+					if( !tile.isChain() )
+					{
+						if( !( tile.isCollect() && avoidCollects ) )
+						{
+							if( !( x == _finn.tileX && y == _finn.tileY ) )
+							{
+								if( !( x == _snail.tileX && y == _snail.tileY ) )
+								{
+									moveSafe = true;
+								}
+							}
+						}
+					}
+					else
+					{
+						_jake.shrink();
+					}
+				}
+			}
+			return moveSafe;
+		}
+		
+		public function nextMoveSafe( avoidCollects:Boolean ):Boolean
+		{
+			var nextMoveSafe:Boolean = false;
+			if( direction == 0 )
+				nextMoveSafe = moveSafe( tileX - 1, tileY, avoidCollects);
+			else if ( direction == 1 )
+				nextMoveSafe = moveSafe( tileX + 1, tileY, avoidCollects );
+			else if ( direction == 2 )
+				nextMoveSafe = moveSafe( tileX, tileY - 1, avoidCollects );
+			else if (direction == 3 )
+				nextMoveSafe = moveSafe( tileX, tileY + 1, avoidCollects );
+			
+			return nextMoveSafe;
+		}
+		
+		public function findSafeMove( avoidCollects:Boolean ):void
+		{
+			var originalDirection:int = direction;
+			
+			if( !nextMoveSafe( avoidCollects ) )
+			{
+				if( originalDirection == 0 )
+				{
+					direction = 1;
+				} 
+				else if ( originalDirection == 1 )
+				{
+					direction = 0;						
+				}
+				else if ( originalDirection == 2 )
+				{
+					direction = 3;
+				}
+				else if ( originalDirection == 3 )
+				{
+					direction = 2;
+				}
+				
+				if( !nextMoveSafe( avoidCollects ) )
+				{
+					if( originalDirection == 0 )
+					{
+						direction = 2;
+					} 
+					else if ( originalDirection == 1 )
+					{
+						direction = 2;						
+					}
+					else if ( originalDirection == 2 )
+					{
+						direction = 0;
+					}
+					else if ( originalDirection == 3 )
+					{
+						direction = 0;
+					}
+					
+					if( !nextMoveSafe( avoidCollects ) )
+					{
+						if( originalDirection == 0 )
+						{
+							direction = 3;
+						} 
+						else if ( originalDirection == 1 )
+						{
+							direction = 3;						
+						}
+						else if ( originalDirection == 2 )
+						{
+							direction = 1;
+						}
+						else if ( originalDirection == 3 )
+						{
+							direction = 1;
+						}
+					}
+				}
+			}		
+		}
+		
+		private function moveTowardsJake():void
+		{
+			if( this.tileX > _jake.tileX )
+			{
+				direction = 0;
+			}
+			else if( this.tileX < _jake.tileX  )
+			{
+				direction = 1;
+			}
+			else if( this.tileY > _jake.tileY )
+			{
+				direction = 2;		
+			}
+			else if ( this.tileY < _jake.tileY )
+			{
+				direction = 3;
+			}
+			
+			findSafeMove( false );
+		}
+		
 		override public function update():void
-		{			
+		{		
 			super.update();
 			
-//			Need to move this to board, should account  for all jake chains
-//			if( tileY > _jake.tileY || tileX > _jake.tileX )
-//			{
-//				foreground = false;
-//				if( !background )
-//				{
-//					background = true;
-//					PlayState.groupPlayer.remove(this);
-//					PlayState.groupBackground.add(this);
-//				}
-//			}
-//			else
-//			{
-//				background = false;
-//				if( !foreground )
-//				{
-//					foreground = true;
-//					PlayState.groupBackground.remove(this);
-//					PlayState.groupPlayer.add(this);
-//				}
-//			}
+			moveTowardsJake();
+			updateZOrdering();
 			
 			if( moving )
 			{
@@ -136,20 +298,20 @@ package
 				play("idle");
 				return;
 			}
-			
-			if(FlxG.keys.LEFT )
+		
+			if( direction == 0 )
 			{
 				moveToTile( tileX - 1, tileY );
 			}
-			else if(FlxG.keys.RIGHT )
+			else if( direction == 1 )
 			{
 				moveToTile( tileX + 1, tileY );
 			}
-			else if(FlxG.keys.UP )
+			else if( direction == 2 )
 			{
 				moveToTile( tileX, tileY - 1);
 			}
-			else if(FlxG.keys.DOWN )
+			else if( direction == 3 )
 			{
 				moveToTile( tileX, tileY + 1);
 			}
