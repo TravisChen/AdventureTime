@@ -29,6 +29,7 @@ package
 		public const COLLECT:Number = 3;
 
 		public var roundOver:Boolean = false;
+		public var stab:Boolean = false;
 		
 		public function Tile( tileType:Number, X:Number, Y:Number, board:Board, setTileX:int, setTileY:int ):void
 		{
@@ -48,6 +49,7 @@ package
 			addAnimation("buttDown", [9]);
 			addAnimation("buttLeft", [4]);
 			addAnimation("buttUp", [5]);
+			addAnimation("stab", [3], 10, false );
 			
 			addAnimation("freshPie", [2,3,4,5], 10);
 			
@@ -127,6 +129,12 @@ package
 			return false;
 		}
 		
+		public function doStab():void
+		{
+			stab = true;
+			play( "stab" );
+		}
+		
 		// COLLECT
 		public function setCollect():void 
 		{
@@ -174,7 +182,7 @@ package
 			}	
 			
 			if( chainLength >= 0 )
-			{
+			{				
 				if( chainLength == 1 )
 				{
 					if( _direction == 0 )
@@ -185,6 +193,17 @@ package
 						play( "buttUp" );
 					else if( _direction == 3 )
 						play( "buttDown" );
+				}
+				else
+				{
+					if( stab )
+					{
+						if( finished )
+						{
+							play( "middle" );
+							stab = false;
+						}
+					}
 				}
 				
 				if( _moveTimer <= 0 )

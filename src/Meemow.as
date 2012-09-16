@@ -17,7 +17,7 @@ package
 		public var tileY:Number;
 		private var moveTo:Tile;
 		private var moving:Boolean = false;
-		private var speed:Number = 0.25;
+		private var speed:Number = 0.5;
 		private var direction:Number = 0.0;
 		
 		private var dead:Boolean = true;
@@ -25,6 +25,7 @@ package
 		public const DEAD_TIME:Number = 5;
 		
 		private var appear:Boolean = false;
+		private var stab:Boolean = false;
 		
 		private var _jake:Jake;
 		private var _finn:Finn;
@@ -50,7 +51,7 @@ package
 			offset.y = 20;
 			
 			addAnimation("walk", [0,1], 20);
-			addAnimation("stab", [1,2], 20, false );
+			addAnimation("stab", [1,2,1,2], 10, false );
 			addAnimation("appear", [3,4,5,6], 10, false);
 			
 			// Start time
@@ -176,11 +177,31 @@ package
 					}
 					else
 					{
-						_jake.shrink();
+						doStab();
 					}
 				}
 			}
 			return moveSafe;
+		}
+		
+		public function doStab():void
+		{
+			play("stab");
+			stab = true;
+			
+			for( var x:int = 0; x < _board.tileMatrix.length; x++ )
+			{
+				for( var y:int = 0; y < _board.tileMatrix[x].length; y++ )
+				{
+					var tile:Tile = _board.tileMatrix[x][y];	
+					if( tile.isChain() )
+					{
+						tile.doStab();
+					}
+				}
+			}
+			
+			_jake.shrink();
 		}
 		
 		public function nextMoveSafe( avoidCollects:Boolean ):Boolean
@@ -308,6 +329,19 @@ package
 				return;
 			}
 			
+			if( stab )
+			{
+				if( finished )
+				{
+					play( "walk" );
+					stab = false;
+				}
+				else
+				{
+					return;
+				}
+			}
+			
 			if( appear )
 			{
 				if( finished )
@@ -342,7 +376,7 @@ package
 			super.update();
 			
 			moveTowardsJake();
-			updateZOrdering();
+			//updateZOrdering();
 			
 			if( moving )
 			{
