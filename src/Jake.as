@@ -91,7 +91,7 @@ package
 			}
 		}
 		
-		public function moveSafe( x:int, y:int ):Boolean
+		public function moveSafe( x:int, y:int, avoidCollects:Boolean ):Boolean
 		{
 			var moveSafe:Boolean = false;
 			if( x >= 0 && x < _board.tileMatrix.length )
@@ -101,9 +101,12 @@ package
 					var tile:Tile = _board.tileMatrix[x][y];	
 					if( !tile.isChain() )
 					{
-						if( !( x == _finn.tileX && y == _finn.tileY ) )
+						if( !( tile.isCollect() && avoidCollects ) )
 						{
-							moveSafe = true;
+							if( !( x == _finn.tileX && y == _finn.tileY ) )
+							{
+								moveSafe = true;
+							}
 						}
 					}
 				}
@@ -111,17 +114,17 @@ package
 			return moveSafe;
 		}
 		
-		public function nextMoveSafe():Boolean
+		public function nextMoveSafe( avoidCollects:Boolean ):Boolean
 		{
 			var nextMoveSafe:Boolean = false;
 			if( direction == 0 )
-				nextMoveSafe = moveSafe( tileX - 1, tileY );
+				nextMoveSafe = moveSafe( tileX - 1, tileY, avoidCollects);
 			else if ( direction == 1 )
-				nextMoveSafe = moveSafe( tileX + 1, tileY );
+				nextMoveSafe = moveSafe( tileX + 1, tileY, avoidCollects );
 			else if ( direction == 2 )
-				nextMoveSafe = moveSafe( tileX, tileY - 1);
+				nextMoveSafe = moveSafe( tileX, tileY - 1, avoidCollects );
 			else if (direction == 3 )
-				nextMoveSafe = moveSafe( tileX, tileY + 1);
+				nextMoveSafe = moveSafe( tileX, tileY + 1, avoidCollects );
 			
 			return nextMoveSafe;
 		}
@@ -168,10 +171,10 @@ package
 					for( var y:int = 0; y < _board.tileMatrix[x].length; y++ )
 					{
 						var tile:Tile = _board.tileMatrix[x][y];	
-						if( tile.isCollect() )
+						if( tile.isCollect() && tile.isCollectActive() )
 						{
 							goalCollect = tile;
-							goalCollect.alpha = 0.5;
+							goalCollect.alpha = 1.0;
 							break;
 						}
 					}
@@ -182,6 +185,77 @@ package
 					}
 				}
 			}
+		}
+		
+		public function findSafeMove( avoidCollects:Boolean ):void
+		{
+			var originalDirection:int = direction;
+			
+			if( !nextMoveSafe( avoidCollects ) )
+			{
+				if( originalDirection == 0 )
+				{
+					direction = 1;
+				} 
+				else if ( originalDirection == 1 )
+				{
+					direction = 0;						
+				}
+				else if ( originalDirection == 2 )
+				{
+					direction = 3;
+				}
+				else if ( originalDirection == 3 )
+				{
+					direction = 2;
+				}
+				
+				if( !nextMoveSafe( avoidCollects ) )
+				{
+					if( originalDirection == 0 )
+					{
+						direction = 2;
+					} 
+					else if ( originalDirection == 1 )
+					{
+						direction = 2;						
+					}
+					else if ( originalDirection == 2 )
+					{
+						direction = 0;
+					}
+					else if ( originalDirection == 3 )
+					{
+						direction = 0;
+					}
+					
+					if( !nextMoveSafe( avoidCollects ) )
+					{
+						if( originalDirection == 0 )
+						{
+							direction = 3;
+						} 
+						else if ( originalDirection == 1 )
+						{
+							direction = 3;						
+						}
+						else if ( originalDirection == 2 )
+						{
+							direction = 1;
+						}
+						else if ( originalDirection == 3 )
+						{
+							direction = 1;
+						}
+					}
+				}
+			}		
+		}
+		
+		public function roam():void 
+		{
+			direction = Math.floor(Math.random() * 4);
+			findSafeMove( true );			
 		}
 		
 		public function updateAIMovement():void
@@ -207,67 +281,11 @@ package
 					direction = 3;
 				}
 				
-				var originalDirection:int = direction;
-				
-				if( !nextMoveSafe() )
-				{
-					if( originalDirection == 0 )
-					{
-						direction = 1;
-					} 
-					else if ( originalDirection == 1 )
-					{
-						direction = 0;						
-					}
-					else if ( originalDirection == 2 )
-					{
-						direction = 3;
-					}
-					else if ( originalDirection == 3 )
-					{
-						direction = 2;
-					}
-					
-					if( !nextMoveSafe() )
-					{
-						if( originalDirection == 0 )
-						{
-							direction = 2;
-						} 
-						else if ( originalDirection == 1 )
-						{
-							direction = 2;						
-						}
-						else if ( originalDirection == 2 )
-						{
-							direction = 0;
-						}
-						else if ( originalDirection == 3 )
-						{
-							direction = 0;
-						}
-						
-						if( !nextMoveSafe() )
-						{
-							if( originalDirection == 0 )
-							{
-								direction = 3;
-							} 
-							else if ( originalDirection == 1 )
-							{
-								direction = 3;						
-							}
-							else if ( originalDirection == 2 )
-							{
-								direction = 1;
-							}
-							else if ( originalDirection == 3 )
-							{
-								direction = 1;
-							}
-						}
-					}
-				}
+				findSafeMove( false );
+			}
+			else
+			{
+				roam();
 			}
 		}
 		

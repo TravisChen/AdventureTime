@@ -10,6 +10,7 @@ package    {
 		public const BOARD_TILE_WIDTH:uint = 19;
 		public const BOARD_TILE_HEIGHT:uint = 19;
 		public const MAX_COLLECTS:uint = 3;
+		public var firstCollect:Boolean = true;
 		
 		public function Board()
 		{
@@ -80,6 +81,12 @@ package    {
 			{
 				tile.setCollect();
 				numCollects++;
+				
+				if( firstCollect )
+				{
+					tile.setCollectActive();
+					firstCollect = false;
+				}
 			}
 		}
 	}

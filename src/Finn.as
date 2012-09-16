@@ -49,7 +49,7 @@ package
 				if( y >= 0 && y < _board.tileMatrix[x].length )
 				{
 					var tile:Tile = _board.tileMatrix[x][y];	
-					if( !tile.isChain() && !tile.isCollect() )
+					if( !tile.isChain() )
 					{
 						if( !(x == _jake.tileX && y == _jake.tileY) )
 						{
@@ -57,6 +57,11 @@ package
 							tileY = y;
 							moveTo = tile;
 							moving = true;
+							
+							if( tile.isCollect() )
+							{
+								tile.setCollectActive();
+							}
 						}
 					}
 				}

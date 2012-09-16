@@ -18,9 +18,17 @@ package
 		public var front:Boolean = false;
 		private var _direction:int = 0;
 		
+		public var collectActive:Boolean = false;
+		
 		private var _moveTime:Number;
 		private var _moveTimer:Number;
 		private var _board:Board;
+		
+		public const NONE:Number = 0;
+		public const CHAIN:Number = 2;
+		public const COLLECT:Number = 3;
+
+
 		
 		public function Tile( tileType:Number, X:Number, Y:Number, board:Board, setTileX:int, setTileY:int ):void
 		{
@@ -56,7 +64,7 @@ package
 			alpha = 1;
 			
 			switch (tileType){
-				case 0:
+				case NONE:
 					loadGraphic(ImgTile0, true, true, width, height);
 					alpha = 0;
 					break;
@@ -64,7 +72,7 @@ package
 					loadGraphic(ImgTile1, true, true, width, height);
 					alpha = 0;
 					break;
-				case 2:
+				case CHAIN:
 					// Bounding box tweaks
 					width = 32;
 					height = 32;
@@ -73,11 +81,12 @@ package
 					
 					loadGraphic(ImgTile2, true, true, width, height);
 					break;
-				case 3:		
+				case COLLECT:		
 					width = 32;
 					height = 36;
 					offset.x = 0;
 					offset.y = 24;
+					alpha = 0.25;
 					
 					loadGraphic(ImgTile3, true, true, width, height);
 					break;
@@ -85,6 +94,7 @@ package
 			type = tileType;
 		}
 
+		// CHAIN
 		public function addSnakeChain( currChainLength:int, moveTime:Number, direction:Number ):void
 		{
 			front = true;
@@ -93,7 +103,7 @@ package
 			_moveTimer = moveTime;
 			_direction = direction;
 			
-			updateGraphic( 2 );	
+			updateGraphic( CHAIN );	
 			if( direction == 0 )
 				play( "frontLeft" );
 			else if( direction == 1 )
@@ -109,28 +119,42 @@ package
 			chainLength++;
 		}
 		
-		public function setCollect():void 
-		{
-			updateGraphic( 3 );		
-		}
-		
 		public function isChain():Boolean 
 		{
-			if( type == 2 )
+			if( type == CHAIN )
 				return true;
 			return false;
 		}
 		
+		// COLLECT
+		public function setCollect():void 
+		{
+			alpha = 0.25;
+			collectActive = false;
+			updateGraphic( COLLECT );		
+		}
+		
+		public function setCollectActive():void 
+		{
+			alpha = 1.0;
+			collectActive = true;
+		}
+		
 		public function isCollect():Boolean 
 		{
-			if( type == 3 )
+			if( type == COLLECT )
 				return true;
 			return false;	
 		}
 		
+		public function isCollectActive():Boolean 
+		{
+			return collectActive;
+		}
+		
 		public function removeCollect():Boolean
 		{
-			if( type == 3 )
+			if( type == COLLECT )
 			{
 				updateGraphic( baseType );
 				_board.removeCollect();
@@ -140,6 +164,7 @@ package
 			return false;
 		}
 		
+		// UPDATE
 		override public function update():void
 		{				
 			if( chainLength >= 0 )
