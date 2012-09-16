@@ -32,7 +32,7 @@ package
 		public const MOVE_TIME:Number = 0.25;	
 		public const MIN_CHAIN:Number = 3;
 		
-		private var particle:FlxEmitterExt;
+		private var particle:FlxEmitter;
 
 		public function Jake( X:int, Y:int, board:Board )
 		{
@@ -43,8 +43,8 @@ package
 			alpha = 0;
 			
 			// Particle
-			particle = new FlxEmitterExt(0,0,-1);
-			particle.makeParticles(ImgParticle,100,15,true,0.2);
+			particle = new FlxEmitter(0,0,-1);
+			particle.makeParticles(ImgParticle,50,16,true,0.2);
 			PlayState.groupForeground.add(particle);
 			
 			// Move player to Tile
@@ -165,13 +165,14 @@ package
 		
 		public function particleExplode():void
 		{
-			particle.x = this.x;
+			particle.x = this.x + 16;
 			particle.y = this.y;
 			
-			particle.gravity = 100;
-			particle.setXSpeed(-2, 2);
-			particle.setYSpeed(-2, 2 );		
-			
+			particle.setXSpeed(-100, 100);
+			particle.setYSpeed(-100, 100);
+			particle.lifespan = 0.5;
+			particle.gravity = 500;
+
 			particle.on = true;
 		}
 		
