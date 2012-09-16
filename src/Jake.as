@@ -360,7 +360,6 @@ package
 			
 			if( roundOver )
 			{
-				play("idle");
 				return;
 			}	
 			
