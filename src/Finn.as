@@ -20,6 +20,7 @@ package
 		private var moveTo:Tile;
 		private var moving:Boolean = false;
 		private var speed:Number = 2.0;
+		private var kicking:Boolean = false;
 		
 		private var _jake:Jake;
 		private var _snail:Snail;
@@ -44,6 +45,7 @@ package
 			
 			addAnimation("idle", [0]);
 			addAnimation("walk", [1,2,3,4,5,6], 20);
+			addAnimation("kick", [1,7,8,1], 15, false );
 			
 			// Start time
 			startTime = 0.5;
@@ -176,7 +178,21 @@ package
 				return;
 			}
 			
-			if(FlxG.keys.LEFT )
+			if( kicking )
+			{
+				if( finished )
+				{
+					kicking = false;
+				}
+				return;
+			}
+			
+			if( FlxG.keys.SPACE )
+			{
+				kicking = true;
+				play( "kick" );
+			}
+			else if(FlxG.keys.LEFT )
 			{
 				play( "walk" );
 				moveToTile( tileX - 1, tileY );
