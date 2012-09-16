@@ -131,7 +131,8 @@ package
 		
 		public function shrink():void
 		{
-			if( chainLength > MIN_CHAIN )
+			trace( "SHRINK, CHAIN LENGTH: " + chainLength );
+			if( chainLength >= MIN_CHAIN )
 			{
 				chainLength--;
 			
@@ -147,6 +148,8 @@ package
 		
 		public function grow():void
 		{
+			trace( "GROW, CHAIN LENGTH: " + chainLength );
+			
 			chainLength++;
 			
 			for( var i:int = 0; i < chainArray.length; i++ )
@@ -238,7 +241,6 @@ package
 				{
 					direction = 3;
 				}
-				trace( "MOVE" );
 				
 				var originalDirection:int = direction;
 				
@@ -271,11 +273,11 @@ package
 						{
 							direction = 2;						
 						}
-						else if ( originalDirection == 3 )
+						else if ( originalDirection == 2 )
 						{
 							direction = 0;
 						}
-						else if ( originalDirection == 4 )
+						else if ( originalDirection == 3 )
 						{
 							direction = 0;
 						}
@@ -290,11 +292,11 @@ package
 							{
 								direction = 3;						
 							}
-							else if ( originalDirection == 3 )
+							else if ( originalDirection == 2 )
 							{
 								direction = 1;
 							}
-							else if ( originalDirection == 4 )
+							else if ( originalDirection == 3 )
 							{
 								direction = 1;
 							}
@@ -344,7 +346,7 @@ package
 				else if (direction == 3 )
 					moveToTile( tileX, tileY + 1);		
 			
-				if( !goalCollect.isCollect() )
+				if( goalCollect && !goalCollect.isCollect() )
 				{
 					goalCollect = undefined;
 					newGoal();

@@ -4,7 +4,7 @@ package
 	
 	public class Finn extends FlxSprite
 	{
-		[Embed(source="data/darwin.png")] private var ImgDarwin:Class;
+		[Embed(source="data/finn.png")] private var ImgDarwin:Class;
 		
 		public var startTime:Number;
 
@@ -27,16 +27,16 @@ package
 			_jake = jake;
 			
 			super(X,Y);
-			loadGraphic(ImgDarwin,true,true,32,32);
+			loadGraphic(ImgDarwin,true,true,32,64);
 			
 			// Move player to Tile
 			setTilePosition( x, y );
 			
 			// Bounding box tweaks
 			width = 32;
-			height = 32;
-			offset.x = 0;
-			offset.y = 20;
+			height = 64;
+			offset.x = 2;
+			offset.y = 52;
 			
 			// Start time
 			startTime = 0.5;
