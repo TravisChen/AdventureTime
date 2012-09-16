@@ -19,11 +19,8 @@ package
 		
 		private var moving:Boolean = false;
 		private var direction:int = 0;
-
-
-		private var chainArray:Array;
 		
-		public var chainLength:int = MIN_CHAIN;
+		public var chainLength:int = 3;
 
 		private var moveTimer:Number = MOVE_TIME;
 
@@ -49,9 +46,6 @@ package
 			offset.x = 0;
 			offset.y = 20;
 			
-			// Chain
-			chainArray = new Array();
-			
 			// Start time
 			startTime = 0.5;
 		}
@@ -67,11 +61,12 @@ package
 			{
 				if( y >= 0 && y < _board.tileMatrix[x].length )
 				{
-					moveTo.addSnakeChain( chainLength, MOVE_TIME, direction);		
-					chainArray.push( moveTo );
+					var prevMoveTo:Tile = moveTo;
 					
 					if( setTilePosition( x, y ) )
 					{
+						prevMoveTo.addSnakeChain( chainLength, MOVE_TIME, direction);
+						
 						if( moveTo.removeCollect() )
 						{
 							grow();
@@ -133,44 +128,12 @@ package
 		
 		public function shrink():void
 		{
-			trace( "SHRINK, CHAIN LENGTH: " + chainLength );
-			if( chainLength >= MIN_CHAIN )
-			{
-				chainLength--;
-			
-				for( var i:int = 0; i < chainArray.length; i++ )
-				{
-					var tile:Tile = chainArray[i];
-					tile.chainLength--;
-				}
-				
-				checkChainArray();
-			}
+			chainLength--;
 		}
 		
 		public function grow():void
 		{
-			trace( "GROW, CHAIN LENGTH: " + chainLength );
-			
-			chainLength++;
-			
-			for( var i:int = 0; i < chainArray.length; i++ )
-			{
-				var tile:Tile = chainArray[i];
-				tile.increaseChainLength();
-			}			
-		}
-		
-		public function checkChainArray():void
-		{
-			for( var i:int = 0; i < chainArray.length; i++ )
-			{
-				var tile:Tile = chainArray[i];
-				if( tile.chainLength <= 0 )
-				{
-					chainArray.splice(i,1);
-				}
-			}
+			chainLength++;		
 		}
 		
 		public function setTilePosition( x:int, y:int ):Boolean
@@ -329,14 +292,13 @@ package
 		}
 	
 		override public function update():void
-		{			
+		{	
 			super.update();
-			checkChainArray();
 
 			if( moveTimer <= 0 )
 			{
 				updateAIMovement();
-				updateKeyboardMovement();
+//				updateKeyboardMovement();
 				
 				moveTimer = MOVE_TIME;
 				if( direction == 0 )
