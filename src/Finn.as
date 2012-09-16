@@ -119,6 +119,9 @@ package
 			var incrementX:int = startX;
 			var incrementY:int = startY;
 			
+			var ex:Number = 0.03;
+			var explodeDelayArray:Array = new Array(ex*2,ex,0,ex*3,ex*8,ex*7,ex*4,ex*5,ex*6);
+			
 			for( var i:int = 0; i < 3; i++ )
 			{
 				for( var j:int = 0; j < 3; j++ )
@@ -128,6 +131,11 @@ package
 						if( incrementY >= 0 && incrementY < _board.tileMatrix[incrementX].length )
 						{
 							var tile:Tile = _board.tileMatrix[incrementX][incrementY];
+							
+							// Create explosion
+							var explosion:Explosion = new Explosion(tile.x,tile.y,explodeDelayArray[(i*3) + j]);
+							PlayState.groupPlayerBehind.add(explosion);
+							
 							if( tile.isCollect() )
 							{
 								collectedFirstPie = true;
