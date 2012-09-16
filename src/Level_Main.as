@@ -48,6 +48,7 @@ package    {
 			// Create meemow
 			meemow = new Meemow(4,4,board,jake,finn,snail);
 			jake.setMeemow( meemow );
+			finn.setMeemow( meemow );
 			PlayState.groupPlayer.add( meemow );
 	
 			// Timer

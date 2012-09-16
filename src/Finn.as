@@ -26,6 +26,7 @@ package
 		
 		private var _jake:Jake;
 		private var _snail:Snail;
+		private var _meemow:Meemow;
 		
 		public var wasd:FlxSprite;
 		public var wasdFadeOutTime:Number = 0;
@@ -76,6 +77,11 @@ package
 			startTime = 0.5;
 		}
 
+		public function setMeemow( meemow:Meemow ):void
+		{
+			_meemow = meemow;
+		}
+		
 		public function moveToTile( x:int, y:int ):void
 		{
 			if( x >= 0 && x < _board.tileMatrix.length )
@@ -126,6 +132,10 @@ package
 							{
 								collectedFirstPie = true;
 								tile.setCollectActive();
+							}
+							else if ( _meemow.tileX == incrementX && _meemow.tileY == incrementY )
+							{
+								_meemow.kick();
 							}
 						}
 					}

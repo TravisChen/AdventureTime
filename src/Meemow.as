@@ -20,6 +20,10 @@ package
 		private var speed:Number = 0.5;
 		private var direction:Number = 0.0;
 		
+		private var dead:Boolean = true;
+		private var deadTimer:Number = DEAD_TIME;
+		public const DEAD_TIME:Number = 5;
+		
 		private var _jake:Jake;
 		private var _finn:Finn;
 		private var _snail:Snail;
@@ -252,6 +256,12 @@ package
 			}		
 		}
 		
+		public function kick():void
+		{
+			dead = true;
+			deadTimer = DEAD_TIME;
+		}
+		
 		private function moveTowardsJake():void
 		{
 			if( this.tileX > _jake.tileX )
@@ -276,6 +286,21 @@ package
 		
 		override public function update():void
 		{		
+			if( dead )
+			{
+				if( deadTimer <= 0 )
+				{
+					deadTimer = DEAD_TIME;
+					alpha = 1.0;
+					dead = false;
+				}
+				else
+				{
+					deadTimer -= FlxG.elapsed;
+					alpha = 0.0;
+				}
+			}
+			
 			super.update();
 			
 			moveTowardsJake();
