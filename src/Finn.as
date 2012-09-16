@@ -49,7 +49,7 @@ package
 			loadGraphic(ImgFinn,true,true,74,64);
 			
 			// Move player to Tile
-			setTilePosition( 0, 0 );
+			setTilePosition( x, y );
 			
 			// Bounding box tweaks
 			width = 74;
@@ -306,7 +306,18 @@ package
 		}
 		
 		override public function update():void
-		{			
+		{	
+			if( startTime > 0 )
+			{
+				startTime -= FlxG.elapsed;
+				return;
+			}
+			
+			if( roundOver )
+			{
+				return;
+			}
+
 			updateWasd();
 			updateSpace();
 			
@@ -317,18 +328,6 @@ package
 			if( moving )
 			{
 				updateMovement();
-				return;
-			}
-
-			if( startTime > 0 )
-			{
-				startTime -= FlxG.elapsed;
-				return;
-			}
-			
-			if( roundOver )
-			{
-				play("idle");
 				return;
 			}
 			

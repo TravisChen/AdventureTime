@@ -285,7 +285,19 @@ package
 		}
 		
 		override public function update():void
-		{		
+		{	
+			if( startTime > 0 )
+			{
+				startTime -= FlxG.elapsed;
+				return;
+			}
+			
+			if( roundOver )
+			{
+				play("idle");
+				return;
+			}
+			
 			if( dead )
 			{
 				if( deadTimer <= 0 )
@@ -299,6 +311,7 @@ package
 					deadTimer -= FlxG.elapsed;
 					alpha = 0.0;
 				}
+				return;
 			}
 			
 			super.update();
@@ -312,18 +325,6 @@ package
 				return;
 			}
 
-			if( startTime > 0 )
-			{
-				startTime -= FlxG.elapsed;
-				return;
-			}
-			
-			if( roundOver )
-			{
-				play("idle");
-				return;
-			}
-		
 			if( direction == 0 )
 			{
 				moveToTile( tileX - 1, tileY );

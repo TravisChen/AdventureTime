@@ -162,6 +162,7 @@ package
 		
 		public function grow():void
 		{
+			PlayState._currLevel.points += ( 50 * ( chainLength - ( MIN_CHAIN - 1 ) ) );
 			chainLength++;
 			particleExplode();
 		}
@@ -351,6 +352,18 @@ package
 	
 		override public function update():void
 		{	
+			if( startTime > 0 )
+			{
+				startTime -= FlxG.elapsed;
+				return;
+			}
+			
+			if( roundOver )
+			{
+				play("idle");
+				return;
+			}	
+			
 			super.update();
 
 			if( moveTimer <= 0 )
@@ -378,18 +391,6 @@ package
 			{
 				moveTimer -= FlxG.elapsed;
 			}
-			
-			if( startTime > 0 )
-			{
-				startTime -= FlxG.elapsed;
-				return;
-			}
-			
-			if( roundOver )
-			{
-				play("idle");
-				return;
-			}	
 		}
 	}
 }

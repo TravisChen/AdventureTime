@@ -28,7 +28,7 @@ package
 		public const CHAIN:Number = 2;
 		public const COLLECT:Number = 3;
 
-
+		public var roundOver:Boolean = false;
 		
 		public function Tile( tileType:Number, X:Number, Y:Number, board:Board, setTileX:int, setTileY:int ):void
 		{
@@ -167,7 +167,13 @@ package
 		
 		// UPDATE
 		override public function update():void
-		{				
+		{
+			if( roundOver )
+			{
+				play("idle");
+				return;
+			}	
+			
 			if( chainLength >= 0 )
 			{
 				if( chainLength == 1 )

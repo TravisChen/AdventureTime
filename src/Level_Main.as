@@ -6,7 +6,8 @@ package    {
 	
 		// Points
 		private var pointsText:FlxText;
-
+		private var lengthText:FlxText;
+		
 		// Timer
 		public var startTime:Number;
 		public var endTime:Number;
@@ -63,10 +64,10 @@ package    {
 			// Points
 			points = 0;
 			pointsText = new FlxText(0, 0, FlxG.width, "0");
-			pointsText.setFormat(null,64,TEXT_COLOR,"right");
+			pointsText.setFormat(null,32,TEXT_COLOR,"right");
 			pointsText.scrollFactor.x = pointsText.scrollFactor.y = 0;
 			PlayState.groupBackground.add(pointsText);
-			
+
 			// Round end
 			roundEnd = false;
 			buildRoundEnd();
@@ -136,7 +137,7 @@ package    {
 			updateTimer();
 
 			// Update points text
-			pointsText.text = "" + jake.chainLength;
+			pointsText.text = "" + points + " (" + (jake.chainLength - 2) + "x)";
 			roundEndPointsText.text = "" + points;
 			
 			super.update();
@@ -145,6 +146,19 @@ package    {
 		private function showEndPrompt():void 
 		{
 			PlayState._currLevel.finn.roundOver = true;
+			PlayState._currLevel.jake.roundOver = true;
+			PlayState._currLevel.meemow.roundOver = true;
+			PlayState._currLevel.snail.roundOver = true;
+			
+			for( var x:int = 0; x < board.tileMatrix.length; x++ )
+			{
+				for( var y:int = 0; y < board.tileMatrix[x].length; y++ )
+				{
+					var tile:Tile = board.tileMatrix[x][y];
+					tile.roundOver = true;
+				}
+			}
+			
 			roundEndPointsText.visible = true;
 		}
 		

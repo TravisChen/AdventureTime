@@ -147,6 +147,18 @@ package
 		
 		override public function update():void
 		{	
+			if( startTime > 0 )
+			{
+				startTime -= FlxG.elapsed;
+				return;
+			}
+			
+			if( roundOver )
+			{
+				play("idle");
+				return;
+			}
+			
 			super.update();
 			
 			updateZOrdering();
