@@ -9,7 +9,7 @@ package    {
 		public var numCollects:int = 0;
 		public const BOARD_TILE_WIDTH:uint = 19;
 		public const BOARD_TILE_HEIGHT:uint = 19;
-		public const MAX_COLLECTS:uint = 3;
+		public const MAX_COLLECTS:uint = 4;
 		public var firstCollect:Boolean = true;
 		
 		public function Board()

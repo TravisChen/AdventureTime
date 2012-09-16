@@ -24,6 +24,8 @@ package
 		private var deadTimer:Number = DEAD_TIME;
 		public const DEAD_TIME:Number = 5;
 		
+		private var appear:Boolean = false;
+		
 		private var _jake:Jake;
 		private var _finn:Finn;
 		private var _snail:Snail;
@@ -48,7 +50,8 @@ package
 			offset.y = 20;
 			
 			addAnimation("walk", [0,1], 20);
-			addAnimation("kick", [1,2], 20, false );
+			addAnimation("stab", [1,2], 20, false );
+			addAnimation("appear", [3,4,5,6], 10, false);
 			
 			// Start time
 			alpha = 0;
@@ -264,6 +267,9 @@ package
 		{
 			dead = true;
 			deadTimer = DEAD_TIME;
+			
+			appear = true;
+			play( "appear" );
 		}
 		
 		private function moveTowardsJake():void
@@ -302,6 +308,19 @@ package
 				return;
 			}
 			
+			if( appear )
+			{
+				if( finished )
+				{
+					play( "walk" );	
+					appear = false;
+				}
+				else
+				{
+					return;
+				}
+			}
+			
 			if( dead )
 			{
 				if( deadTimer <= 0 )
@@ -309,6 +328,8 @@ package
 					deadTimer = DEAD_TIME;
 					alpha = 1.0;
 					dead = false;
+					appear = true;
+					play( "appear" );
 				}
 				else
 				{
