@@ -17,7 +17,7 @@ package
 		public var tileY:Number;
 		private var moveTo:Tile;
 		private var moving:Boolean = false;
-		private var speed:Number = 0.5;
+		private var speed:Number = 0.25;
 		private var direction:Number = 0.0;
 		
 		private var dead:Boolean = true;

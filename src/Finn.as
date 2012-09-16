@@ -46,16 +46,16 @@ package
 			_snail = snail;
 			
 			super(X,Y);
-			loadGraphic(ImgFinn,true,true,41,64);
+			loadGraphic(ImgFinn,true,true,74,64);
 			
 			// Move player to Tile
-			setTilePosition( x, y );
+			setTilePosition( 0, 0 );
 			
 			// Bounding box tweaks
-			width = 41;
+			width = 74;
 			height = 64;
-			offset.x = 2;
-			offset.y = 52;
+			offset.x = 22;
+			offset.y = 53;
 			
 			// WASD
 			wasd = new FlxSprite(0,0);
@@ -71,7 +71,7 @@ package
 			
 			addAnimation("idle", [0]);
 			addAnimation("walk", [1,2,3,4,5,6], 20);
-			addAnimation("kick", [1,7,8,1], 15, false );
+			addAnimation("kick", [7,8,9,10], 20, false );
 			
 			// Start time
 			startTime = 0.5;
