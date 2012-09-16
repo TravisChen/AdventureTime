@@ -7,7 +7,7 @@ package
 		[Embed(source='../data/tile-dark.png')] private var ImgTile0:Class;
 		[Embed(source='../data/tile-light.png')] private var ImgTile1:Class;
 		[Embed(source='../data/jake.png')] private var ImgTile2:Class;
-		[Embed(source='../data/barrel.png')] private var ImgTile3:Class;
+		[Embed(source='../data/pie.png')] private var ImgTile3:Class;
 		
 		public var type:int;
 		public var baseType:int = -1;
@@ -49,6 +49,8 @@ package
 			addAnimation("buttLeft", [4]);
 			addAnimation("buttUp", [5]);
 			
+			addAnimation("freshPie", [1,2,3,4], 10);
+			
 			updateGraphic(tileType);
 		}
 		
@@ -83,10 +85,10 @@ package
 					break;
 				case COLLECT:		
 					width = 32;
-					height = 36;
+					height = 32;
 					offset.x = 0;
-					offset.y = 24;
-					alpha = 0.25;
+					offset.y = 14;
+					alpha = 0.5;
 					
 					loadGraphic(ImgTile3, true, true, width, height);
 					break;
@@ -129,7 +131,7 @@ package
 		// COLLECT
 		public function setCollect():void 
 		{
-			alpha = 0.25;
+			alpha = 0.75;
 			collectActive = false;
 			updateGraphic( COLLECT );		
 		}
@@ -137,6 +139,7 @@ package
 		public function setCollectActive():void 
 		{
 			alpha = 1.0;
+			play("freshPie");
 			collectActive = true;
 		}
 		
@@ -203,7 +206,21 @@ package
 			}
 			else
 			{
-				play( "idle" );
+				if( type == COLLECT )
+				{
+					if( this.isCollectActive() )
+					{
+						play("freshPie");
+					}
+					else
+					{
+						play( "idle" );
+					}
+				}
+				else
+				{
+					play( "idle" );
+				}
 			}
 			
 			super.update();
