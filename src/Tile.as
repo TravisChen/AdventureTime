@@ -30,6 +30,7 @@ package
 
 		public var roundOver:Boolean = false;
 		public var stab:Boolean = false;
+		public var stabPie:Boolean = false;
 		
 		public function Tile( tileType:Number, X:Number, Y:Number, board:Board, setTileX:int, setTileY:int ):void
 		{
@@ -51,6 +52,7 @@ package
 			addAnimation("buttUp", [5]);
 			addAnimation("stab", [3], 10, false );
 			
+			addAnimation("stabPie", [1,2,3,4,5], 10, false);
 			addAnimation("freshPie", [2,3,4,5], 10);
 			
 			updateGraphic(tileType);
@@ -87,9 +89,9 @@ package
 					break;
 				case COLLECT:		
 					width = 32;
-					height = 32;
+					height = 45;
 					offset.x = 0;
-					offset.y = 14;
+					offset.y = 28;
 					
 					loadGraphic(ImgTile3, true, true, width, height);
 					break;
@@ -145,7 +147,7 @@ package
 		public function setCollectActive():void 
 		{
 			alpha = 1.0;
-			play("freshPie");
+			play( "freshPie" );
 			collectActive = true;
 		}
 		
@@ -232,7 +234,7 @@ package
 				{
 					if( this.isCollectActive() )
 					{
-						play("freshPie");
+						play( "freshPie" );
 					}
 					else
 					{
