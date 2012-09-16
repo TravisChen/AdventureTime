@@ -49,7 +49,7 @@ package
 			addAnimation("buttLeft", [4]);
 			addAnimation("buttUp", [5]);
 			
-			addAnimation("freshPie", [1,2,3,4], 10);
+			addAnimation("freshPie", [2,3,4,5], 10);
 			
 			updateGraphic(tileType);
 		}
@@ -88,7 +88,6 @@ package
 					height = 32;
 					offset.x = 0;
 					offset.y = 14;
-					alpha = 0.5;
 					
 					loadGraphic(ImgTile3, true, true, width, height);
 					break;
@@ -131,7 +130,6 @@ package
 		// COLLECT
 		public function setCollect():void 
 		{
-			alpha = 0.75;
 			collectActive = false;
 			updateGraphic( COLLECT );		
 		}

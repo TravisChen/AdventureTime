@@ -5,6 +5,7 @@ package
 	public class Jake extends FlxSprite
 	{
 		[Embed(source="data/jake.png")] private var ImgDarwin:Class;
+		[Embed(source="../data/particle.png")] private var ImgParticle:Class;
 		
 		public var startTime:Number;
 		
@@ -30,6 +31,8 @@ package
 		
 		public const MOVE_TIME:Number = 0.25;	
 		public const MIN_CHAIN:Number = 3;
+		
+		private var particle:FlxEmitterExt;
 
 		public function Jake( X:int, Y:int, board:Board )
 		{
@@ -38,6 +41,11 @@ package
 			super(X,Y);
 			loadGraphic(ImgDarwin,true,true,32,32);
 			alpha = 0;
+			
+			// Particle
+			particle = new FlxEmitterExt(0,0,-1);
+			particle.makeParticles(ImgParticle,100,15,true,0.2);
+			PlayState.groupForeground.add(particle);
 			
 			// Move player to Tile
 			setTilePosition( x, y );
@@ -151,7 +159,20 @@ package
 		
 		public function grow():void
 		{
-			chainLength++;		
+			chainLength++;
+			particleExplode();
+		}
+		
+		public function particleExplode():void
+		{
+			particle.x = this.x;
+			particle.y = this.y;
+			
+			particle.gravity = 100;
+			particle.setXSpeed(-2, 2);
+			particle.setYSpeed(-2, 2 );		
+			
+			particle.on = true;
 		}
 		
 		public function setTilePosition( x:int, y:int ):Boolean
