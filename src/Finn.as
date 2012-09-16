@@ -74,7 +74,7 @@ package
 			addAnimation("kick", [7,8,9,10], 20, false );
 			
 			// Start time
-			startTime = 0.5;
+			startTime = 0.0;
 		}
 
 		public function setMeemow( meemow:Meemow ):void
@@ -315,6 +315,7 @@ package
 			
 			if( roundOver )
 			{
+				play( "idle" );
 				return;
 			}
 

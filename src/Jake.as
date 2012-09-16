@@ -57,7 +57,7 @@ package
 			offset.y = 20;
 			
 			// Start time
-			startTime = 0.5;
+			startTime = 0.0;
 		}
 		
 		public function setFinn( finn:Finn ):void

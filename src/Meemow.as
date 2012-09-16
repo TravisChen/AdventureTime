@@ -47,8 +47,12 @@ package
 			offset.x = -4;
 			offset.y = 20;
 			
+			addAnimation("walk", [0,1], 20);
+			addAnimation("kick", [1,2], 20, false );
+			
 			// Start time
-			startTime = 0.5;
+			alpha = 0;
+			startTime = 0.0;
 		}
 
 		public function moveToTile( x:int, y:int ):void
@@ -327,18 +331,22 @@ package
 
 			if( direction == 0 )
 			{
+				play( "walk" );
 				moveToTile( tileX - 1, tileY );
 			}
 			else if( direction == 1 )
 			{
+				play( "walk" );
 				moveToTile( tileX + 1, tileY );
 			}
 			else if( direction == 2 )
 			{
+				play( "walk" );
 				moveToTile( tileX, tileY - 1);
 			}
 			else if( direction == 3 )
 			{
+				play( "walk" );
 				moveToTile( tileX, tileY + 1);
 			}
 		}
