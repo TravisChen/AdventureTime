@@ -5,6 +5,7 @@ package
 	public class Meemow extends FlxSprite
 	{
 		[Embed(source="data/meemow.png")] private var ImgMeemow:Class;
+		[Embed(source="../data/particle-blood.png")] private var ImgParticle:Class;
 		[Embed(source = '../data/Audio/appear.mp3')] private var SndAppear:Class;
 		[Embed(source = '../data/Audio/destroy.mp3')] private var SndDestroy:Class;
 		[Embed(source = '../data/Audio/stab.mp3')] private var SndStab:Class;
@@ -34,6 +35,8 @@ package
 		private var _finn:Finn;
 		private var _snail:Snail;
 		
+		private var particle:FlxEmitter;
+		
 		public function Meemow( X:int, Y:int, board:Board, jake:Jake, finn:Finn, snail:Snail)
 		{
 			_board = board;
@@ -46,6 +49,11 @@ package
 			
 			// Move player to Tile
 			setTilePosition( x, y );
+			
+			// Particle
+			particle = new FlxEmitter(0,0,-1);
+			particle.makeParticles(ImgParticle,200,16,true,0.2);
+			PlayState.groupForeground.add(particle);
 			
 			// Bounding box tweaks
 			width = 32;
@@ -206,6 +214,20 @@ package
 			
 			_jake.shrink();
 			FlxG.play(SndStab,0.2);
+			particleExplode();
+		}
+		
+		public function particleExplode():void
+		{
+			particle.x = this.x + 16;
+			particle.y = this.y;
+			
+			particle.setXSpeed(-100, 100);
+			particle.setYSpeed(-100, 100);
+			particle.lifespan = 0.25;
+			particle.gravity = 500;
+			
+			particle.on = true;
 		}
 		
 		public function nextMoveSafe( avoidCollects:Boolean ):Boolean
