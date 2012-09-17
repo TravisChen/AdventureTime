@@ -4,6 +4,8 @@ package    {
 	
 	public class Level_Main extends Level{
 	
+		[Embed(source='../data/roundover.png')] private var ImgRoundEnd:Class;
+		
 		// Points
 		private var pointsText:FlxText;
 		private var lengthText:FlxText;
@@ -17,10 +19,13 @@ package    {
 		private var roundEnd:Boolean;
 		private var roundEndContinueText:FlxText;
 		private var roundEndPointsText:FlxText;
+		private var roundEndTitleText:FlxText;
+		private var roundEndForeground:FlxSprite;
 		
 		// Consts
 		public const MAX_TIME:uint = 120;
 		public const TEXT_COLOR:uint = 0xFFFFFFFF;
+		public const CONTINUE_COLOR:uint = 0x00C0F8;
 		
 		public var board:Board;
 		
@@ -76,17 +81,29 @@ package    {
 		}
 		
 		public function buildRoundEnd():void {
-			roundEndContinueText = new FlxText(0, FlxG.height - 16, FlxG.width, "PRESS ANY KEY TO CONTINUE");
-			roundEndContinueText.setFormat(null,8,TEXT_COLOR,"center");
+			roundEndForeground = new FlxSprite(0,0);
+			roundEndForeground.loadGraphic(ImgRoundEnd, true, true, levelSizeX, levelSizeY);
+			roundEndForeground.scrollFactor.x = roundEndForeground.scrollFactor.y = 0;
+			roundEndForeground.visible = false;
+			PlayState.groupForeground.add(roundEndForeground);
+			
+			roundEndContinueText = new FlxText(0, FlxG.height - 154, FlxG.width, "PRESS ANY KEY TO CONTINUE");
+			roundEndContinueText.setFormat(null,16,CONTINUE_COLOR,"center");
 			roundEndContinueText.scrollFactor.x = roundEndContinueText.scrollFactor.y = 0;	
 			roundEndContinueText.visible = false;
 			PlayState.groupForeground.add(roundEndContinueText);
 			
-			roundEndPointsText = new FlxText(0, FlxG.height - 48, FlxG.width, "0");
-			roundEndPointsText.setFormat(null,16,TEXT_COLOR,"center");
-			roundEndPointsText.scrollFactor.x = roundEndContinueText.scrollFactor.y = 0;	
+			roundEndPointsText = new FlxText(0, FlxG.height/2 - 30, FlxG.width, "");
+			roundEndPointsText.setFormat(null,64,TEXT_COLOR,"center");
+			roundEndPointsText.scrollFactor.x = roundEndPointsText.scrollFactor.y = 0;	
 			roundEndPointsText.visible = false;
 			PlayState.groupForeground.add(roundEndPointsText);
+			
+			roundEndTitleText = new FlxText(0, FlxG.height/2 - 70, FlxG.width, "ROUND OVER");
+			roundEndTitleText.setFormat(null,32,CONTINUE_COLOR,"center");
+			roundEndTitleText.scrollFactor.x = roundEndTitleText.scrollFactor.y = 0;	
+			roundEndTitleText.visible = false;
+			PlayState.groupForeground.add(roundEndTitleText);
 		}
 		
 		private function updateTimer():void
@@ -160,6 +177,8 @@ package    {
 			}
 			
 			roundEndPointsText.visible = true;
+			roundEndForeground.visible = true;
+			roundEndTitleText.visible = true;
 		}
 		
 		private function checkAnyKey():void 

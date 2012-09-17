@@ -99,7 +99,10 @@ package    {
 		}
 		
 		override public function update():void
-		{			
+		{		
+			// BG color
+			FlxG.bgColor = 0xFF8ad7e9;
+			
 			updateWasd();
 			
 			super.update();
