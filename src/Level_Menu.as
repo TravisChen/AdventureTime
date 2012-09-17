@@ -4,7 +4,9 @@ package    {
 	
 	public class Level_Menu extends Level{
 		
-		[Embed(source = '../data/wasd.png')] private var ImgWasd:Class;
+		[Embed(source = '../data/sky.png')] private var ImgBackground:Class;
+		[Embed(source = '../data/adventure.png')] private var ImgAdventure:Class;
+		[Embed(source = '../data/space-big.png')] private var ImgWasd:Class;
 		
 		public var wasd:FlxSprite;
 		public var wasdFadeInTime:Number;
@@ -17,8 +19,8 @@ package    {
 			
 			super();
 			
-			levelSizeX = 320;
-			levelSizeY = 240;
+			levelSizeX = 680;
+			levelSizeY = 400;
 			
 			startTime = 1.0;
 			
@@ -41,6 +43,22 @@ package    {
 		}
 		
 		public function createForegroundAndBackground():void {
+			
+			var backgroundSprite:FlxSprite;
+			backgroundSprite = new FlxSprite(0,0);
+			backgroundSprite.loadGraphic(ImgBackground, true, true, levelSizeX, levelSizeY);	
+			PlayState.groupLowest.add(backgroundSprite);
+			
+			var introPlayer:PlayerIntro = new PlayerIntro(FlxG.width/2 - 110,FlxG.height/2 + 6);
+			PlayState.groupBackground.add(introPlayer);
+			
+			backgroundSprite = new FlxSprite(0,0);
+			backgroundSprite.loadGraphic(ImgAdventure, true, true, levelSizeX, levelSizeY);	
+			PlayState.groupBackground.add(backgroundSprite);
+			
+			var introSplash:IntroSplash = new IntroSplash(0,0);
+			PlayState.groupBackground.add(introSplash);
+			
 			// Create wasd
 			createWasd();
 		}
@@ -48,9 +66,9 @@ package    {
 		public function createWasd():void {
 			// Create wasd
 			wasd = new FlxSprite(0,0);
-			wasd.loadGraphic(ImgWasd, true, true, 32, 32);	
-			wasd.x = FlxG.width/2 - 16;
-			wasd.y = FlxG.height/2 - 16;
+			wasd.loadGraphic(ImgWasd, true, true, 64, 64);	
+			wasd.x = FlxG.width/2 - 32;
+			wasd.y = -12;
 			wasd.alpha = 0;
 			
 			// Add to foreground

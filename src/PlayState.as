@@ -6,6 +6,7 @@ package
 	{
 		public static var _currLevel:Level;
 		
+		public static var groupLowest:FlxGroup;
 		public static var groupBackground:FlxGroup;
 		public static var groupPlayerBehind:FlxGroup;
 		public static var groupBoard:FlxGroup;
@@ -17,6 +18,7 @@ package
 		{
 			super();
 
+			groupLowest = new FlxGroup;
 			groupBackground = new FlxGroup;
 			groupPlayerBehind = new FlxGroup;
 			groupBoard = new FlxGroup;
@@ -28,6 +30,7 @@ package
 			var currLevelClass:Class = levelArray[AdventureTime.currLevelIndex];
 			_currLevel = new currLevelClass( groupBackground );
 			
+			this.add(groupLowest);
 			this.add(groupBackground);
 			this.add(groupPlayerBehind);
 			this.add(groupBoard);

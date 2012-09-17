@@ -239,7 +239,7 @@ package
 		public function updateWasd():void 
 		{
 			wasd.y = y - 76;
-			wasd.x = x + 2;
+			wasd.x = x;
 			
 			if( moving )
 			{
@@ -271,7 +271,7 @@ package
 		public function updateSpace():void 
 		{
 			space.y = y - 76;
-			space.x = x + 2;
+			space.x = x;
 			
 			if( wasd.alpha == 1 )
 			{

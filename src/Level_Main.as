@@ -6,6 +6,7 @@ package    {
 	
 		[Embed(source='../data/roundover.png')] private var ImgRoundEnd:Class;
 		[Embed(source = '../data/Audio/song.mp3')] private var SndSong:Class;
+		[Embed(source = '../data/sky.png')] private var ImgBackground:Class;
 		
 		// Points
 		private var pointsText:FlxText;
@@ -73,6 +74,11 @@ package    {
 			pointsText.setFormat(null,32,TEXT_COLOR,"right");
 			pointsText.scrollFactor.x = pointsText.scrollFactor.y = 0;
 			PlayState.groupBackground.add(pointsText);
+			
+			var backgroundSprite:FlxSprite;
+			backgroundSprite = new FlxSprite(0,0);
+			backgroundSprite.loadGraphic(ImgBackground, true, true, levelSizeX, levelSizeY);	
+			PlayState.groupLowest.add(backgroundSprite);
 
 			FlxG.playMusic(SndSong,1.0);
 			
