@@ -4,8 +4,11 @@ package
 	
 	public class Jake extends FlxSprite
 	{
-		[Embed(source="data/jake.png")] private var ImgDarwin:Class;
+		[Embed(source="data/jake.png")] private var ImgJake:Class;
 		[Embed(source="../data/particle.png")] private var ImgParticle:Class;
+		[Embed(source = '../data/Audio/bling.mp3')] private var SndBling:Class;
+		[Embed(source = '../data/Audio/chomp.mp3')] private var SndChomp:Class;
+		[Embed(source = '../data/Audio/hit.mp3')] private var SndHit:Class;
 		
 		public var startTime:Number;
 		
@@ -39,7 +42,7 @@ package
 			_board = board;
 			
 			super(X,Y);
-			loadGraphic(ImgDarwin,true,true,32,32);
+			loadGraphic(ImgJake,true,true,32,32);
 			alpha = 0;
 			
 			// Particle
@@ -156,12 +159,16 @@ package
 		{
 			if( chainLength > MIN_CHAIN )
 			{
+				FlxG.play(SndHit,0.8);
 				chainLength--;
 			}	
 		}
 		
 		public function grow():void
 		{
+			FlxG.play(SndBling,0.45);
+			FlxG.play(SndChomp,0.65);
+			
 			PlayState._currLevel.points += ( 50 * ( chainLength - ( MIN_CHAIN - 1 ) ) );
 			chainLength++;
 			particleExplode();

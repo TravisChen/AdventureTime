@@ -5,6 +5,9 @@ package
 	public class Meemow extends FlxSprite
 	{
 		[Embed(source="data/meemow.png")] private var ImgMeemow:Class;
+		[Embed(source = '../data/Audio/appear.mp3')] private var SndAppear:Class;
+		[Embed(source = '../data/Audio/destroy.mp3')] private var SndDestroy:Class;
+		[Embed(source = '../data/Audio/stab.mp3')] private var SndStab:Class;
 		
 		public var startTime:Number;
 
@@ -202,6 +205,7 @@ package
 			}
 			
 			_jake.shrink();
+			FlxG.play(SndStab,0.2);
 		}
 		
 		public function nextMoveSafe( avoidCollects:Boolean ):Boolean
@@ -286,11 +290,16 @@ package
 		
 		public function kick():void
 		{
+			if( dead )
+				return;
+			
 			dead = true;
 			deadTimer = DEAD_TIME + Math.floor(Math.random() * 2);;
 			
 			appear = true;
 			play( "appear" );
+			
+			FlxG.play(SndDestroy,0.3);
 		}
 		
 		private function moveTowardsJake():void
@@ -329,12 +338,12 @@ package
 				return;
 			}
 			
-			if( stab )
+			if( appear )
 			{
 				if( finished )
 				{
-					play( "walk" );
-					stab = false;
+					play( "walk" );	
+					appear = false;
 				}
 				else
 				{
@@ -342,12 +351,12 @@ package
 				}
 			}
 			
-			if( appear )
+			if( stab )
 			{
 				if( finished )
 				{
-					play( "walk" );	
-					appear = false;
+					play( "walk" );
+					stab = false;
 				}
 				else
 				{
@@ -363,6 +372,7 @@ package
 					alpha = 1.0;
 					dead = false;
 					appear = true;
+					FlxG.play(SndAppear,0.4);
 					play( "appear" );
 				}
 				else

@@ -9,6 +9,9 @@ package
 		[Embed(source="data/finn.png")] private var ImgFinn:Class;
 		[Embed(source="data/wasd.png")] private var ImgWasd:Class;
 		[Embed(source="data/space.png")] private var ImgSpace:Class;
+		[Embed(source = '../data/Audio/slash-alt.mp3')] private var SndSlash:Class;
+		[Embed(source = '../data/Audio/slash.mp3')] private var SndSlashBacking:Class;
+		[Embed(source = '../data/Audio/pie-unveal.mp3')] private var SndPie:Class;
 		
 		public var startTime:Number;
 
@@ -122,6 +125,9 @@ package
 			var ex:Number = 0.03;
 			var explodeDelayArray:Array = new Array(ex*2,ex,0,ex*3,ex*8,ex*7,ex*4,ex*5,ex*6);
 			
+			FlxG.play(SndSlash,0.35);
+			FlxG.play(SndSlashBacking,0.25);
+			
 			for( var i:int = 0; i < 3; i++ )
 			{
 				for( var j:int = 0; j < 3; j++ )
@@ -140,6 +146,8 @@ package
 							{
 								collectedFirstPie = true;
 								tile.setCollectActive();
+								
+								FlxG.play(SndPie,0.75);
 							}
 							else if ( _meemow.tileX == incrementX && _meemow.tileY == incrementY )
 							{

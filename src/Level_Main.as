@@ -5,6 +5,7 @@ package    {
 	public class Level_Main extends Level{
 	
 		[Embed(source='../data/roundover.png')] private var ImgRoundEnd:Class;
+		[Embed(source = '../data/Audio/song.mp3')] private var SndSong:Class;
 		
 		// Points
 		private var pointsText:FlxText;
@@ -73,6 +74,8 @@ package    {
 			pointsText.scrollFactor.x = pointsText.scrollFactor.y = 0;
 			PlayState.groupBackground.add(pointsText);
 
+			FlxG.playMusic(SndSong,1.0);
+			
 			// Round end
 			roundEnd = false;
 			buildRoundEnd();
@@ -162,6 +165,8 @@ package    {
 		
 		private function showEndPrompt():void 
 		{
+			FlxG.music.stop();
+
 			PlayState._currLevel.finn.roundOver = true;
 			PlayState._currLevel.jake.roundOver = true;
 			PlayState._currLevel.meemow.roundOver = true;
