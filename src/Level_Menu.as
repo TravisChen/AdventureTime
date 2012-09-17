@@ -14,6 +14,7 @@ package    {
 		public var wasdBounceToggle:Boolean;
 		
 		public var startTime:Number;
+		public const TITLE_COLOR:uint = 0x00C0F8;
 
 		public function Level_Menu( group:FlxGroup ) {
 			
@@ -58,6 +59,11 @@ package    {
 			
 			var introSplash:IntroSplash = new IntroSplash(0,0);
 			PlayState.groupBackground.add(introSplash);
+			
+			var title:FlxText = new FlxText(0, FlxG.height - 48, FlxG.width, "BAD ATTICUBE");
+			title.setFormat(null,32,TITLE_COLOR,"center");
+			title.scrollFactor.x = title.scrollFactor.y = 0;	
+			PlayState.groupForeground.add(title);
 			
 			// Create wasd
 			createWasd();
